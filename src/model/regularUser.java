@@ -9,9 +9,6 @@ public class regularUser extends User {
         super(name, identification);
         this.linkDate = Calendar.getInstance();   
     }
-    public Calendar getLinkDate() {
-        return linkDate;
-    }
 
     
 

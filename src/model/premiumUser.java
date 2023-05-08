@@ -10,8 +10,4 @@ public class premiumUser extends User {
         this.linkDate = Calendar.getInstance();
     }
 
-    public Calendar getLinkDate() {
-        return linkDate;
-    }
-
 }

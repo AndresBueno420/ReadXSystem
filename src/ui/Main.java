@@ -42,7 +42,7 @@ public class Main{
         switch(option){
             case 1:
             registerNewUser();
-            System.out.println("The user has been registered succesfully");
+            
 
         }
 
@@ -74,7 +74,8 @@ public class Main{
         System.out.println("2. Regular User. ");
         int typeOfUser = reader.nextInt();
 
-        controller.registUser(name, identification, typeOfUser);
+        String msg = controller.registUser(name, identification, typeOfUser);
+        System.out.println(msg);
     }
 
 }
