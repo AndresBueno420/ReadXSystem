@@ -35,6 +35,7 @@ public class Main{
         System.out.println("-".repeat(length));
         System.out.println("Choose your option : ");
         System.out.println("1. Register User.");
+        System.out.println("2. Register Bibliographic Product.");
 
     }
 
@@ -42,11 +43,11 @@ public class Main{
         switch(option){
             case 1:
             registerNewUser();
+            case 2:
+            registerNewProduct();
             
 
         }
-
-
     }
 
     public int validateIntegerInput(){
@@ -76,6 +77,76 @@ public class Main{
 
         String msg = controller.registUser(name, identification, typeOfUser);
         System.out.println(msg);
+    }
+
+    public void registerNewProduct(){
+
+        String productName = " ";
+        int bookPages = 0;
+        String publicationDate = " ";
+        String productPrice = " ";
+        int magCategory = 0;
+        int emPeriodicity = 0;
+        int bookType = 0;
+        
+        System.out.println("Choose the kind of product that is going to be registered: ");
+        System.out.println("1. Book product. ");
+        System.out.println("2. Magazine product.");
+
+        int kind = reader.nextInt();
+
+        switch(kind){
+
+            case 1:
+            System.out.println("Type the name of the magazine: ");
+            productName = reader.next();
+            System.out.println("Type the amount of pages: ");
+            bookPages = reader.nextInt();
+            System.out.println("Type the publication date: ");
+            publicationDate = reader.next();
+            System.out.println("Type the price of the magazine: ");
+            productPrice = reader.next();
+
+            System.out.println("Choose the magazine's category:");
+            System.out.println("1. Variety");
+            System.out.println("2. Design");
+            System.out.println("3. Cientific");
+
+            magCategory = reader.nextInt();
+
+            System.out.println("Choose the periodicity of emision: ");
+            System.out.println("1. Daily.");
+            System.out.println("2. Weekly.");
+            System.out.println("3. Monthly.");
+            System.out.println("4. Annually.");
+
+            emPeriodicity = reader.nextInt();
+
+            String msg = controller.registBiblioProduct(productName, bookPages, publicationDate, productPrice, magCategory, emPeriodicity);
+
+            System.out.println(msg);
+
+            case 2:
+            System.out.println("Type the name of the book: ");
+            productName = reader.next();
+            System.out.println("Type the amount of pages: ");
+            bookPages = reader.nextInt();
+            System.out.println("Type the publication date: ");
+            publicationDate = reader.next();
+            System.out.println("Type the price of the book: ");
+            productPrice = reader.next();
+
+            System.out.println("Choose the book's genre: ");
+            System.out.println("1. Science Fiction. ");
+            System.out.println("2. Fantasy. ");
+            System.out.println("3. Historic novel");
+
+            bookType = reader.nextInt();
+
+            String msg2 = controller.registBiblioProduct(productName, bookPages, publicationDate, productPrice, bookType);
+
+            System.out.println(msg2);
+        }
     }
 
 }

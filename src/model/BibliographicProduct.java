@@ -1,7 +1,8 @@
 package model;
 import java.util.UUID;
 
-public abstract class biblioProduct {
+public abstract class BibliographicProduct {
+    
     private String uniqueId;
     private String productName;
     private int bookPages;
@@ -9,7 +10,7 @@ public abstract class biblioProduct {
     private String productPrice;
     private int amountReadPages;
 
-    public biblioProduct(String productName, int bookPages, String publicationDate, String productPrice){
+    public BibliographicProduct(String productName, int bookPages, String publicationDate, String productPrice){
         this.productName = productName;
         this.bookPages = bookPages;
         this.publicationDate = publicationDate;
@@ -37,15 +38,6 @@ public abstract class biblioProduct {
     public void setBookPages(int newBookPages){
         this.bookPages = newBookPages;
     }
-    
-
-
-
-
-
-
-
-
-
-    
+        
 }
+
