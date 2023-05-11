@@ -12,5 +12,9 @@ public class Book extends BibliographicProduct {
         this.bookGenre = bookGenre;
     }
 
+    public void increaseCopiesSold(){
+        this.copiesSold +=1;
+    }
+
     
 }

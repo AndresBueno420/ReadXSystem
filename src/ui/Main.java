@@ -36,6 +36,8 @@ public class Main{
         System.out.println("Choose your option : ");
         System.out.println("1. Register User.");
         System.out.println("2. Register Bibliographic Product.");
+        System.out.println("4. Buy a book.");
+        System.out.println("-------------------");
 
     }
 
@@ -45,6 +47,9 @@ public class Main{
             registerNewUser();
             case 2:
             registerNewProduct();
+            case 4:
+            buyBook();
+
             
 
         }
@@ -147,6 +152,19 @@ public class Main{
 
             System.out.println(msg2);
         }
+    }
+
+    public void buyBook(){
+
+        System.out.println("Type the user name:");
+        String name = reader.next();
+
+        System.out.println("Type the book to buy: ");
+        String bookName = reader.next();
+
+        String msj = controller.buyBook(name, bookName);
+
+        System.out.println(msj);
     }
 
 }

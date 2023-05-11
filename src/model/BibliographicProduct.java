@@ -9,6 +9,7 @@ public abstract class BibliographicProduct {
     private String publicationDate;
     private String productPrice;
     private int amountReadPages;
+    
 
     public BibliographicProduct(String productName, int bookPages, String publicationDate, String productPrice){
         this.productName = productName;

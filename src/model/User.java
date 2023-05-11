@@ -1,6 +1,7 @@
 package model;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 
 public abstract class User {
@@ -8,6 +9,8 @@ public abstract class User {
     private String userName;
     private String identification;
     private String linkDate;
+    ArrayList<BibliographicProduct> books;
+    ArrayList<BibliographicProduct> magazines;
 
     public User(String userName, String identification){
 
@@ -32,7 +35,6 @@ public abstract class User {
     public String getLinkDate(){
         return linkDate;
     }
-    
-    
-      
+    public abstract String addProduct(BibliographicProduct product);
+       
 }
