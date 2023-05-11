@@ -1,10 +1,13 @@
 package model;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 public class ReadController {
 
     ArrayList<User> users;
     ArrayList<BibliographicProduct> bibliographicProducts;
+    ArrayList<String> dates;
 
     public ReadController(){
         users = new ArrayList<>();
@@ -87,4 +90,68 @@ public class ReadController {
         return msj;
 
     }
+
+    public BibliographicProduct searchProduct(String productName){
+
+        boolean foundProject = false;
+        BibliographicProduct product = null;
+
+        for(int i = 0; i < bibliographicProducts.size() && !foundProject;i++){
+            if(bibliographicProducts.get(i).getProductName().equalsIgnoreCase(productName)){
+                foundProject = true;
+                product = bibliographicProducts.get(i);
+            }
+        }
+        return product;
+    }
+
+    public String buyBook(String userName, String bookName){
+
+        boolean foundUser = false;
+        boolean foundProduct = false;
+        String msj = " ";
+
+        for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
+            BibliographicProduct product = bibliographicProducts.get(i);
+            if(product.getProductName().equalsIgnoreCase(bookName) && product instanceof Book){
+                foundProduct = true;
+                for(int x = 0; x < users.size() && !foundUser; x++){
+                    User user = users.get(x);
+                    if(user.getUsername().equals(userName) && user instanceof regularUser){
+
+                        foundUser = true;
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        String linkingDate = dateFormat.format(calendar.getTime());
+                        dates.add(linkingDate);
+                        msj = user.addProduct(product) + linkingDate;
+
+                        
+                    }
+                    else if(user.getUsername().equals(userName) && user instanceof premiumUser){
+
+                        foundUser = true;
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        String linkingDate = dateFormat.format(calendar.getTime());
+                        dates.add(linkingDate);
+                        msj = user.addProduct(product) + linkingDate;
+                    }
+                    else{
+                        msj = "The user does not exist.";
+                    }
+                    
+                }
+
+            }
+            else{
+                msj = "The book does not exist.";
+            }
+
+        }
+
+        return msj;
+    }
+
+    
 }
