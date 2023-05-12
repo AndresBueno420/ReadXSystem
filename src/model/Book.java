@@ -11,10 +11,14 @@ public class Book extends BibliographicProduct {
         this.copiesSold = 0;
         this.bookGenre = bookGenre;
     }
-
-    public void increaseCopiesSold(){
+  /**
+   * The function increments the number of copies sold by one.
+   */
+    public void setCopiesSold(){
         this.copiesSold +=1;
     }
 
-    
 }
+
+    
+

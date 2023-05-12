@@ -39,6 +39,10 @@ public abstract class BibliographicProduct {
     public void setBookPages(int newBookPages){
         this.bookPages = newBookPages;
     }
+    public void setProductPrice(String newProductPrice){
+        this.productPrice = newProductPrice;
+    }
+   
         
 }
 

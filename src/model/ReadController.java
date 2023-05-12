@@ -13,6 +13,18 @@ public class ReadController {
         users = new ArrayList<>();
         bibliographicProducts = new ArrayList<>();
     }
+    /**
+     * The function adds a new user to a list based on their user type and returns a message indicating
+     * the success of the operation.
+     * 
+     * @param username The username of the user being registered.
+     * @param identification It is a String variable that represents the identification of the user
+     * being registered. It could be a unique identifier such as an ID number or a username.
+     * @param userKind an integer value representing the type of user to be registered. 1 represents a
+     * premium user and 2 represents a regular user.
+     * @return The method `registUser` returns a message indicating whether a Premium or Regular user
+     * has been added and at what date.
+     */
     public String registUser(String username, String identification, int userKind){
 
         User user = null;
@@ -34,6 +46,24 @@ public class ReadController {
         return msg;
     }
 
+    /**
+     * This Java function registers a new magazine product with specified attributes and adds it to a
+     * list of bibliographic products.
+     * 
+     * @param productName A string representing the name of the bibliographic product (in this case, a
+     * magazine).
+     * @param bookPages The number of pages in the book.
+     * @param publicationDate A string representing the date of publication of the bibliographic
+     * product.
+     * @param productPrice A string representing the price of the product.
+     * @param magCategory an integer representing the category of the magazine product being
+     * registered.
+     * @param emPeriodicity The frequency of publication for a magazine, represented as an integer
+     * value. 1 represents daily, 2 represents weekly, 3 represents monthly, and any other integer
+     * value represents annual.
+     * @return The method is returning a String message that confirms the registration of a
+     * bibliographic product and includes the unique ID of the product.
+     */
     public String registBiblioProduct(String productName, int bookPages, String publicationDate, String productPrice, int magCategory, int emPeriodicity){
 
         Category magKind;
@@ -69,6 +99,20 @@ public class ReadController {
         return msj;
     }
 
+   /**
+    * The function registers a book with its details and adds it to a list of bibliographic products.
+    * 
+    * @param productName A string representing the name of the book being registered as a bibliographic
+    * product.
+    * @param bookPages The number of pages in the book.
+    * @param publicationDate A string representing the publication date of the book in the format
+    * "YYYY-MM-DD".
+    * @param productPrice a String representing the price of the book.
+    * @param bookGenre an integer representing the genre of the book. 1 represents science fiction, 2
+    * represents fantasy, and any other integer represents a historic novel.
+    * @return The method is returning a message that confirms the registration of a book and includes
+    * its unique ID.
+    */
     public String registBiblioProduct(String productName, int bookPages, String publicationDate, String productPrice, int bookGenre){
 
         Genre bookType;
@@ -90,6 +134,16 @@ public class ReadController {
         return msj;
 
     }
+
+    
+   /**
+    * The function deletes a product from a list of bibliographic products and returns a message
+    * indicating whether the product was successfully removed or not.
+    * 
+    * @param productName a String representing the name of the product that needs to be deleted from a
+    * list of bibliographic products.
+    * @return A message indicating whether the product was successfully removed or not.
+    */
     public String deleteProduct(String productName){
 
         String msj = " ";
@@ -109,7 +163,57 @@ public class ReadController {
         }
         return msj;
     }
+    public String modifyProductName(String id, String newName){
 
+        String msj = " ";
+        for(int i = 0; i < bibliographicProducts.size(); i++){
+            if(bibliographicProducts.get(i).getUniqueId().equals(id)){
+                bibliographicProducts.get(i).setProductName(newName);
+                msj = "The name has been updated.";
+            }
+            else{
+                msj = "The product has not been found.";
+            }
+        }
+        return msj;
+
+    }
+    public String modifyProductPages(String id, int newPages){
+
+        String msj = " ";
+        for(int i = 0; i < bibliographicProducts.size(); i++){
+            if(bibliographicProducts.get(i).getUniqueId().equals(id)){
+                bibliographicProducts.get(i).setBookPages(newPages);
+                msj = "The pages have been updated.";
+            }
+            else{
+                msj = "The product has not been found.";
+            }
+        }
+        return msj;
+    }
+    public String modifyProductPrice(String id, String newPrice){
+
+        String msj = " ";
+        for(int i = 0; i < bibliographicProducts.size(); i++){
+            if(bibliographicProducts.get(i).getUniqueId().equals(id)){
+                bibliographicProducts.get(i).setProductPrice(newPrice);
+                msj = "The price has been updated.";
+            }
+            else{
+                msj = "The product has not been found.";
+            }
+        }
+        return msj;
+    }
+
+    /**
+     * This Java function searches for a bibliographic product by name and returns it if found.
+     * 
+     * @param productName a String representing the name of a bibliographic product that needs to be
+     * searched for in a list of bibliographic products.
+     * @return The method `searchProduct` returns a `BibliographicProduct` object.
+     */
     public BibliographicProduct searchProduct(String productName){
 
         boolean foundProject = false;
@@ -124,6 +228,19 @@ public class ReadController {
         return product;
     }
 
+   /**
+    * The function allows a user to buy a book and updates the copies sold and purchase date, while
+    * also checking if the user and book exist.
+    * 
+    * @param userName A String representing the username of the user who wants to buy the book.
+    * @param bookName A String representing the name of the book that the user wants to buy.
+    * @return The method returns a String message that indicates whether the book was bought
+    * successfully or not, and includes the date of purchase. The message can be one of the following:
+    * - "The user does not exist."
+    * - "The book does not exist."
+    * - A message returned by the addProduct() method of the User class, concatenated with the date of
+    * purchase.
+    */
     public String buyBook(String userName, String bookName){
 
         boolean foundUser = false;
@@ -139,7 +256,9 @@ public class ReadController {
                     if(user.getUsername().equals(userName) && user instanceof regularUser){
 
                         foundUser = true;
+                       
                         Calendar calendar = Calendar.getInstance();
+                        ((Book)bibliographicProducts.get(i)).setCopiesSold();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
                         dates.add(buyDate);
@@ -151,6 +270,7 @@ public class ReadController {
 
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
+                        ((Book)bibliographicProducts.get(i)).setCopiesSold();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
                         dates.add(buyDate);
@@ -172,6 +292,15 @@ public class ReadController {
         return msj;
     }
 
+   /**
+    * The function allows a user to buy a magazine and adds it to their list of products, while also
+    * setting the subscription as active and recording the date of purchase.
+    * 
+    * @param userName The username of the user who wants to buy the magazine.
+    * @param magazineName The name of the magazine that the user wants to buy.
+    * @return The method returns a String message that indicates whether the magazine was successfully
+    * purchased or not, and includes the date of the purchase if it was successful.
+    */
     public String buyMagazine(String userName, String magazineName){
 
         boolean foundUser = false;
@@ -188,6 +317,7 @@ public class ReadController {
 
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
+                        ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String linkingDate = dateFormat.format(calendar.getTime());
                         dates.add(linkingDate);
@@ -199,6 +329,7 @@ public class ReadController {
 
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
+                        ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String linkingDate = dateFormat.format(calendar.getTime());
                         dates.add(linkingDate);
@@ -220,6 +351,12 @@ public class ReadController {
         return msj;
     }
 
+   /**
+    * This Java function displays a list of books from a collection of bibliographic products.
+    * 
+    * @return The method `displayBooks` returns a string that contains the names of all the books in
+    * the `bibliographicProducts` list, along with a number assigned to each book as an option.
+    */
     public String displayBooks(){
 
         String msj = " ";
@@ -232,6 +369,12 @@ public class ReadController {
         return msj;
     }
 
+   /**
+    * This Java function displays a list of magazines from a collection of bibliographic products.
+    * 
+    * @return The method `displayMagazines` returns a string that contains the names of all the
+    * magazines in the `bibliographicProducts` list.
+    */
     public String displayMagazines(){
 
         String msj = " ";

@@ -1,6 +1,6 @@
 package model;
 
-public class Magazine extends BibliographicProduct{
+public class Magazine extends BibliographicProduct {
 
     private Category magCategory;
     private Periodicity emisionPeriodicity;
@@ -13,4 +13,13 @@ public class Magazine extends BibliographicProduct{
         this.emisionPeriodicity = emPeriodicity;
         this.activeSubscription = 0;
     }
+    
+   /**
+    * The function increments the value of the activeSubscription variable by 1.
+    */
+    public void setActiveSubscriptions(){
+        this.activeSubscription +=1;
+    }
+   
+    
 }

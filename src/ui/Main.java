@@ -36,8 +36,10 @@ public class Main{
         System.out.println("Choose your option : ");
         System.out.println("1. Register User.");
         System.out.println("2. Register Product.");
-        System.out.println("4. Buy a book.");
-        System.out.println("5. Subscribe to a magazine.");
+        System.out.println("3. Modify Product.");
+        System.out.println("4. Delete Product.");
+        System.out.println("5. Buy a book.");
+        System.out.println("6. Subscribe to a magazine.");
         System.out.println("-------------------");
 
     }
@@ -48,9 +50,13 @@ public class Main{
             registerNewUser();
             case 2:
             registerNewProduct();
+            case 3:
+            modifyProduct();
             case 4:
-            buyBook();
+            deleteProduct();
             case 5:
+            buyBook();
+            case 6:
             subscribeMagazine();
 
             
@@ -58,6 +64,12 @@ public class Main{
         }
     }
 
+    /**
+     * This function validates user input to ensure it is an integer and returns the integer value or
+     * -1 if the input is invalid.
+     * 
+     * @return The method is returning an integer value.
+     */
     public int validateIntegerInput(){
         int option = 0; 
         if(reader.hasNextInt()){
@@ -71,6 +83,10 @@ public class Main{
         return option; 
     }
 
+    /**
+     * This function registers a new user by taking input for their name, identification, and type of
+     * user, and then calling a controller method to register the user.
+     */
     public void registerNewUser(){
         System.out.println("Type the user's Name");
         String name = reader.next();
@@ -87,6 +103,10 @@ public class Main{
         System.out.println(msg);
     }
 
+    /**
+     * This function allows the user to register a new book or magazine product with various attributes
+     * and categories.
+     */
     public void registerNewProduct(){
 
         String productName = " ";
@@ -156,11 +176,27 @@ public class Main{
             System.out.println(msg2);
         }
     }
+    public void deleteProduct(){
 
+        System.out.println("Type the name of the product that is going to be deleted:");
+        String productName = reader.next();
+
+        String msj = controller.deleteProduct(productName);
+        System.out.println(msj);
+    }
+
+   /**
+    * The function allows a user to buy a book by displaying a list of available books and prompting
+    * the user to select a book to buy.
+    */
     public void buyBook(){
 
         System.out.println("Type the user name:");
         String name = reader.next();
+
+        String menu = controller.displayBooks();
+        System.out.println(menu);
+        System.out.println("-------------------");
 
         System.out.println("Type the book to buy: ");
         String bookName = reader.next();
@@ -169,10 +205,18 @@ public class Main{
 
         System.out.println(msj);
     }
+   /**
+    * This function allows a user to subscribe to a magazine by selecting a magazine from a list and
+    * entering their name.
+    */
     public void subscribeMagazine(){
 
         System.out.println("Type the user name:");
         String name = reader.next();
+
+        String menu = controller.displayMagazines();
+        System.out.println(menu);
+        System.out.println("-------------------");
 
         System.out.println("Type the magazine's name: ");
         String bookName = reader.next();
@@ -180,6 +224,58 @@ public class Main{
         String msj = controller.buyMagazine(name, bookName);
 
         System.out.println(msj);
+    }
+    public void modifyMenu(){
+
+        System.out.println("1. Change name.");
+        System.out.println("2. Change pages.");
+        System.out.println("3. Change prices.");
+        
+    }
+    public void modifyProduct(){
+        modifyMenu();
+        String productId = " ";
+        String newProductName = " ";
+        String msj = " ";
+        String newProductPrice = " ";
+        int newPages = 0;
+        System.out.println("------------------");
+        System.out.println("Choose your option : ");
+        int option = reader.nextInt();
+
+        switch(option){
+            case 1:
+            System.out.println("Type the product id.");
+            productId = reader.next();
+            System.out.println("Type the new name:");
+            newProductName = reader.next();
+
+            msj = controller.modifyProductName(productId, newProductName);
+            System.out.println(msj);
+
+            break;
+            case 2:
+            System.out.println("Type the product id.");
+            productId = reader.next();
+            System.out.println("Type the new amount of pages:");
+            newPages = reader.nextInt();
+
+            msj = controller.modifyProductPages(productId, newPages);
+            System.out.println(msj);
+
+            break;
+            case 3:
+            System.out.println("Type the product id.");
+            productId = reader.next();
+            System.out.println("Type the new price:");
+            newProductPrice = reader.next();
+
+            msj = controller.modifyProductPrice(productId, newProductPrice);
+            System.out.println(msj);
+
+            break;
+
+        }
     }
 
 }
