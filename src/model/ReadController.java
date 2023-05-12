@@ -90,6 +90,25 @@ public class ReadController {
         return msj;
 
     }
+    public String deleteProduct(String productName){
+
+        String msj = " ";
+        boolean foundProduct = false; 
+
+        for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
+            BibliographicProduct product = bibliographicProducts.get(i);
+            if(product.getProductName().equals(productName)){
+                bibliographicProducts.remove(i);
+                msj = "The product has been removed succesfully.";
+                foundProduct = true;
+                
+            }
+            else{
+                msj = "The product has not been found. ";
+            }
+        }
+        return msj;
+    }
 
     public BibliographicProduct searchProduct(String productName){
 
@@ -114,6 +133,54 @@ public class ReadController {
         for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
             BibliographicProduct product = bibliographicProducts.get(i);
             if(product.getProductName().equalsIgnoreCase(bookName) && product instanceof Book){
+                foundProduct = true;
+                for(int x = 0; x < users.size() && !foundUser; x++){
+                    User user = users.get(x);
+                    if(user.getUsername().equals(userName) && user instanceof regularUser){
+
+                        foundUser = true;
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        String buyDate = dateFormat.format(calendar.getTime());
+                        dates.add(buyDate);
+                        msj = user.addProduct(product) + buyDate;
+
+                        
+                    }
+                    else if(user.getUsername().equals(userName) && user instanceof premiumUser){
+
+                        foundUser = true;
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        String buyDate = dateFormat.format(calendar.getTime());
+                        dates.add(buyDate);
+                        msj = user.addProduct(product) + buyDate;
+                    }
+                    else{
+                        msj = "The user does not exist.";
+                    }
+                    
+                }
+
+            }
+            else{
+                msj = "The book does not exist.";
+            }
+
+        }
+
+        return msj;
+    }
+
+    public String buyMagazine(String userName, String magazineName){
+
+        boolean foundUser = false;
+        boolean foundProduct = false;
+        String msj = " ";
+
+        for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
+            BibliographicProduct product = bibliographicProducts.get(i);
+            if(product.getProductName().equalsIgnoreCase(magazineName) && product instanceof Magazine){
                 foundProduct = true;
                 for(int x = 0; x < users.size() && !foundUser; x++){
                     User user = users.get(x);
@@ -153,5 +220,28 @@ public class ReadController {
         return msj;
     }
 
+    public String displayBooks(){
+
+        String msj = " ";
+        int optionCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Book; i ++){
+            optionCount =+ 1;
+            msj = optionCount + "." + bibliographicProducts.get(i).getProductName() + "\n" ;
+        }
+        return msj;
+    }
+
+    public String displayMagazines(){
+
+        String msj = " ";
+        int optionCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Magazine; i ++){
+            optionCount =+ 1;
+            msj = optionCount + "." + bibliographicProducts.get(i).getProductName() + "\n" ;
+        }
+        return msj;
+    }
     
 }

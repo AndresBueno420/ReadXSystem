@@ -9,8 +9,8 @@ public abstract class User {
     private String userName;
     private String identification;
     private String linkDate;
-    ArrayList<BibliographicProduct> books;
-    ArrayList<BibliographicProduct> magazines;
+    ArrayList<BibliographicProduct> inventory;
+   
 
     public User(String userName, String identification){
 

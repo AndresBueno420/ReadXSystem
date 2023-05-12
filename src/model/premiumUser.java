@@ -9,7 +9,7 @@ public class premiumUser extends User {
     @Override
     public String addProduct(BibliographicProduct product){
 
-        books.add(product);
+        inventory.add(product);
         String msj = " The product has been added succesfully" + "\n";
 
         return msj;
