@@ -12,6 +12,7 @@ public class ReadController {
     public ReadController(){
         users = new ArrayList<>();
         bibliographicProducts = new ArrayList<>();
+        testCase();
     }
     /**
      * The function adds a new user to a list based on their user type and returns a message indicating
@@ -163,6 +164,15 @@ public class ReadController {
         }
         return msj;
     }
+ /**
+  * This Java function modifies the name of a bibliographic product based on its unique ID and returns
+  * a message indicating whether the update was successful or not.
+  * 
+  * @param id A String representing the unique identifier of a bibliographic product.
+  * @param newName The new name that you want to set for a bibliographic product.
+  * @return A message indicating whether the product name has been updated or if the product has not
+  * been found.
+  */
     public String modifyProductName(String id, String newName){
 
         String msj = " ";
@@ -178,6 +188,15 @@ public class ReadController {
         return msj;
 
     }
+/**
+ * This Java function modifies the number of pages of a bibliographic product with a given ID and
+ * returns a message indicating whether the update was successful or not.
+ * 
+ * @param id A String representing the unique identifier of a bibliographic product.
+ * @param newPages An integer representing the new number of pages for a book product.
+ * @return A message indicating whether the pages of a bibliographic product have been updated or if
+ * the product has not been found.
+ */
     public String modifyProductPages(String id, int newPages){
 
         String msj = " ";
@@ -192,6 +211,15 @@ public class ReadController {
         }
         return msj;
     }
+  /**
+   * This function modifies the price of a bibliographic product with a given ID and returns a message
+   * indicating whether the product was found and the price was updated or not.
+   * 
+   * @param id A String representing the unique identifier of a bibliographic product.
+   * @param newPrice A String representing the new price of a bibliographic product.
+   * @return A message indicating whether the price of the product with the given ID has been updated
+   * or if the product has not been found.
+   */
     public String modifyProductPrice(String id, String newPrice){
 
         String msj = " ";
@@ -228,19 +256,17 @@ public class ReadController {
         return product;
     }
 
-   /**
-    * The function allows a user to buy a book and updates the copies sold and purchase date, while
-    * also checking if the user and book exist.
-    * 
-    * @param userName A String representing the username of the user who wants to buy the book.
-    * @param bookName A String representing the name of the book that the user wants to buy.
-    * @return The method returns a String message that indicates whether the book was bought
-    * successfully or not, and includes the date of purchase. The message can be one of the following:
-    * - "The user does not exist."
-    * - "The book does not exist."
-    * - A message returned by the addProduct() method of the User class, concatenated with the date of
-    * purchase.
-    */
+ 
+    /**
+     * The function allows a user to buy a book and updates the necessary information such as the
+     * number of copies sold and the purchase date.
+     * 
+     * @param userName A String representing the username of the user who wants to buy a book.
+     * @param bookName The name of the book that the user wants to buy.
+     * @return The method returns a String message that indicates whether the book was bought
+     * successfully or not, and includes information about the user, the book, the date of purchase,
+     * and the price. If the user or the book does not exist, it returns a message indicating that.
+     */
     public String buyBook(String userName, String bookName){
 
         boolean foundUser = false;
@@ -252,8 +278,7 @@ public class ReadController {
             if(product.getProductName().equalsIgnoreCase(bookName) && product instanceof Book){
                 foundProduct = true;
                 for(int x = 0; x < users.size() && !foundUser; x++){
-                    User user = users.get(x);
-                    if(user.getUsername().equals(userName) && user instanceof regularUser){
+                    if(users.get(i).getUsername().equalsIgnoreCase(userName) && users.get(x) instanceof regularUser){
 
                         foundUser = true;
                        
@@ -262,11 +287,11 @@ public class ReadController {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
                         dates.add(buyDate);
-                        msj = user.addProduct(product) + buyDate;
+                        msj = ((regularUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyDate + "\n" + "by a price of " +  product.getProductPrice() ;
 
                         
                     }
-                    else if(user.getUsername().equals(userName) && user instanceof premiumUser){
+                    else if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof premiumUser){
 
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
@@ -274,7 +299,7 @@ public class ReadController {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
                         dates.add(buyDate);
-                        msj = user.addProduct(product) + buyDate;
+                        msj = ((premiumUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyDate + "\n" + "by a price of " +  product.getProductPrice() ;
                     }
                     else{
                         msj = "The user does not exist.";
@@ -292,48 +317,50 @@ public class ReadController {
         return msj;
     }
 
-   /**
-    * The function allows a user to buy a magazine and adds it to their list of products, while also
-    * setting the subscription as active and recording the date of purchase.
-    * 
-    * @param userName The username of the user who wants to buy the magazine.
-    * @param magazineName The name of the magazine that the user wants to buy.
-    * @return The method returns a String message that indicates whether the magazine was successfully
-    * purchased or not, and includes the date of the purchase if it was successful.
-    */
+ 
+  /**
+   * The function buys a magazine for a user and returns a message indicating the success or failure of
+   * the transaction.
+   * 
+   * @param userName The username of the user who wants to buy the magazine.
+   * @param magazineName The name of the magazine that the user wants to buy.
+   * @return The method returns a String message that indicates whether the purchase of a magazine was
+   * successful or not, and includes information such as the user who made the purchase, the date and
+   * time of the purchase, and the price of the product. The message may also indicate if the user or
+   * the magazine does not exist.
+   */
     public String buyMagazine(String userName, String magazineName){
 
         boolean foundUser = false;
         boolean foundProduct = false;
-        String msj = " ";
+        String msj = "";
 
         for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
             BibliographicProduct product = bibliographicProducts.get(i);
             if(product.getProductName().equalsIgnoreCase(magazineName) && product instanceof Magazine){
                 foundProduct = true;
                 for(int x = 0; x < users.size() && !foundUser; x++){
-                    User user = users.get(x);
-                    if(user.getUsername().equals(userName) && user instanceof regularUser){
+                    if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof regularUser){
 
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
                         ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String linkingDate = dateFormat.format(calendar.getTime());
-                        dates.add(linkingDate);
-                        msj = user.addProduct(product) + linkingDate;
+                        String buyingDate = dateFormat.format(calendar.getTime());
+                        dates.add(buyingDate);
+                        msj = ((regularUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyingDate + "\n" + "by a price of " +  product.getProductPrice() ;
 
                         
                     }
-                    else if(user.getUsername().equals(userName) && user instanceof premiumUser){
+                    else if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof premiumUser){
 
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
                         ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String linkingDate = dateFormat.format(calendar.getTime());
-                        dates.add(linkingDate);
-                        msj = user.addProduct(product) + linkingDate;
+                        String buyingDate = dateFormat.format(calendar.getTime());
+                        dates.add(buyingDate);
+                        msj = ((premiumUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyingDate + "\n" + "by a price of " +  product.getProductPrice() ;
                     }
                     else{
                         msj = "The user does not exist.";
@@ -359,7 +386,7 @@ public class ReadController {
     */
     public String displayBooks(){
 
-        String msj = " ";
+        String msj = "";
         int optionCount = 0;
 
         for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Book; i ++){
@@ -377,7 +404,7 @@ public class ReadController {
     */
     public String displayMagazines(){
 
-        String msj = " ";
+        String msj = "";
         int optionCount = 0;
 
         for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Magazine; i ++){
@@ -386,5 +413,61 @@ public class ReadController {
         }
         return msj;
     }
+    /**
+     * The function creates instances of a book, magazine, regular user, and premium user and adds them
+     * to their respective lists.
+     */
+    public void testCase(){
+
+        BibliographicProduct book = new Book("100 Anios de soledad", 320, "01/10", "87000", Genre.HISTORIC_NOVEL);
+        BibliographicProduct magazine = new Magazine(null, 0, null, null, null, null);
+        User regularUser = new regularUser("Andres", "1117349952");
+        User premiumUser = new premiumUser("Alejo", "24604311");
+
+        bibliographicProducts.add(book);
+        bibliographicProducts.add(magazine);
+        users.add(regularUser);
+        users.add(premiumUser);
+    }
+
+   /**
+    * This Java function returns the name of a product based on its unique ID from a list of
+    * bibliographic products.
+    * 
+    * @param id a String representing the unique ID of a bibliographic product.
+    * @return The method `returnProductName` returns a `String` variable `name`, which represents the
+    * name of a bibliographic product with a unique ID that matches the input parameter `id`.
+    */
+    public String returnProductName(String id){
+
+        String name = "";
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i).getUniqueId().equals(id)){
+                name = bibliographicProducts.get(i).getProductName();
+            }
+        }
+        return name;
+    }
+    /**
+     * This Java function returns the number of pages of a book with a given unique ID from a list of
+     * bibliographic products.
+     * 
+     * @param id a String representing the unique ID of a bibliographic product (e.g. a book) in a list
+     * called "bibliographicProducts".
+     * @return The method `returnBookPages` returns an integer value representing the number of pages
+     * of a book with the given unique ID.
+     */
+    public int returnBookPages(String id){
+
+        int pages = 0;
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i).getUniqueId().equals(id)){
+                pages = bibliographicProducts.get(i).getBookPages();
+            }
+        }
+        return pages;
+
+    }
+    
     
 }

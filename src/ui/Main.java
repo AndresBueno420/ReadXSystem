@@ -23,7 +23,7 @@ public class Main{
             option = main.validateIntegerInput();
             main.executeOption(option);
 
-        }while(option != 10);
+        }while(option != 8);
 
     }
     public void menu(){
@@ -40,6 +40,8 @@ public class Main{
         System.out.println("4. Delete Product.");
         System.out.println("5. Buy a book.");
         System.out.println("6. Subscribe to a magazine.");
+        System.out.println("7. Simulate a lecture session.");
+        System.out.println("8. Exit.");
         System.out.println("-------------------");
 
     }
@@ -48,16 +50,33 @@ public class Main{
         switch(option){
             case 1:
             registerNewUser();
+                break;
             case 2:
             registerNewProduct();
+                break;
             case 3:
             modifyProduct();
+                break;
             case 4:
             deleteProduct();
+                break;
             case 5:
             buyBook();
+                break;
             case 6:
             subscribeMagazine();
+                break;
+            case 7:
+            lectureSession();
+                break;
+
+            case 8:
+            System.out.println("Thanks for ussing the system");
+                break;
+            
+            default:
+            System.out.println("Please choose a correct option.");
+                break;
 
             
 
@@ -127,11 +146,13 @@ public class Main{
 
             case 1:
             System.out.println("Type the name of the magazine: ");
-            productName = reader.next();
+            reader.next();
+            productName = reader.nextLine();
             System.out.println("Type the amount of pages: ");
             bookPages = reader.nextInt();
             System.out.println("Type the publication date: ");
-            publicationDate = reader.next();
+            reader.next();
+            publicationDate = reader.nextLine();
             System.out.println("Type the price of the magazine: ");
             productPrice = reader.next();
 
@@ -156,11 +177,13 @@ public class Main{
 
             case 2:
             System.out.println("Type the name of the book: ");
-            productName = reader.next();
+            reader.next();
+            productName = reader.nextLine();
             System.out.println("Type the amount of pages: ");
             bookPages = reader.nextInt();
             System.out.println("Type the publication date: ");
-            publicationDate = reader.next();
+            reader.next();
+            publicationDate = reader.nextLine();
             System.out.println("Type the price of the book: ");
             productPrice = reader.next();
 
@@ -199,7 +222,8 @@ public class Main{
         System.out.println("-------------------");
 
         System.out.println("Type the book to buy: ");
-        String bookName = reader.next();
+        reader.next();
+        String bookName = reader.nextLine();
 
         String msj = controller.buyBook(name, bookName);
 
@@ -219,12 +243,16 @@ public class Main{
         System.out.println("-------------------");
 
         System.out.println("Type the magazine's name: ");
-        String bookName = reader.next();
+        reader.next();
+        String bookName = reader.nextLine();
 
         String msj = controller.buyMagazine(name, bookName);
 
         System.out.println(msj);
     }
+    /**
+     * The function "modifyMenu" prints out options to change the name, pages, or prices of a menu.
+     */
     public void modifyMenu(){
 
         System.out.println("1. Change name.");
@@ -232,6 +260,10 @@ public class Main{
         System.out.println("3. Change prices.");
         
     }
+    /**
+     * This Java function allows the user to modify a product's name, pages, or price by selecting an
+     * option and entering the new information.
+     */
     public void modifyProduct(){
         modifyMenu();
         String productId = " ";
@@ -248,7 +280,8 @@ public class Main{
             System.out.println("Type the product id.");
             productId = reader.next();
             System.out.println("Type the new name:");
-            newProductName = reader.next();
+            reader.next();
+            newProductName = reader.nextLine();
 
             msj = controller.modifyProductName(productId, newProductName);
             System.out.println(msj);
@@ -275,6 +308,52 @@ public class Main{
 
             break;
 
+        }
+    }
+    /**
+     * This function simulates a lecture session for a book, allowing the user to navigate through its
+     * pages.
+     */
+    public void lectureSession(){
+
+        String productId = "";
+        String productName = "";
+        int bookPages = 0;
+        int counterPages = 1;
+        int option = 0;
+
+        System.out.println("Type the id of the product:");
+        productId = reader.next();
+
+        productName = controller.returnProductName(productId);
+        bookPages = controller.returnBookPages(productId);
+
+        if(productName != "" && bookPages != 0){
+            do{
+                System.out.println("Lecture session in progress: " + "\n");
+                System.out.println("Reading: " + productName);
+                System.out.println(" ");
+                System.out.println(" ");
+                System.out.println("Reading page " + counterPages + " of" + bookPages);
+                System.out.println(" ");
+                System.out.println("1. Next page.");
+                System.out.println("2. Previous page.");
+                System.out.println("3. Finish the lecture session.");
+                option = reader.nextInt();
+    
+                if(option == 1){
+    
+                    counterPages++;
+                }
+                else if(option == 2){
+    
+                    counterPages--;
+                }
+            }while(option != 3 || counterPages != bookPages );
+
+        }
+        else{
+            System.out.println("The product by that id does not exist.");
         }
     }
 
