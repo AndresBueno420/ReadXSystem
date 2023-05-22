@@ -17,6 +17,9 @@ public class Book extends BibliographicProduct {
     public void setCopiesSold(){
         this.copiesSold +=1;
     }
+    public Genre getBookGenre(){
+        return this.bookGenre;
+    }
 
 }
 

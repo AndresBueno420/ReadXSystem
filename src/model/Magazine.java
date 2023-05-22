@@ -20,6 +20,8 @@ public class Magazine extends BibliographicProduct {
     public void setActiveSubscriptions(){
         this.activeSubscription +=1;
     }
-   
+   public Category getCategory(){
+        return this.magCategory;
+   }
     
 }

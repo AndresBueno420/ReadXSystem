@@ -69,6 +69,12 @@ public class Main{
             case 7:
             lectureSession();
                 break;
+            case 10:
+            showReadPagesProduct();
+                break;
+            case 11:
+            showMostReadGenreAndCategory();
+                break;
 
             case 8:
             System.out.println("Thanks for ussing the system");
@@ -355,6 +361,22 @@ public class Main{
         else{
             System.out.println("The product by that id does not exist.");
         }
+    }
+    public void showReadPagesProduct(){
+        String msjBook = controller.showReadPagesOfBooks();
+        String msjMagazine = controller.showReadPagesOfMagazines();
+
+        String msjToPrint = msjBook + "\n" + msjMagazine;
+
+        System.out.println(msjToPrint);
+    }
+    public void showMostReadGenreAndCategory(){
+        String msjBook = controller.showMostReadGenre();
+        String msjMagazine = controller.showMostReadCategory();
+
+        String msjToPrint = msjBook + "\n" + msjMagazine;
+
+        System.out.println(msjToPrint);
     }
 
 }

@@ -88,7 +88,9 @@ public abstract class BibliographicProduct {
     public String getProductPrice(){
         return this.productPrice;
     }
-   
-        
+    public int getAmountReadPages(){
+        return this.amountReadPages;
+    }
+       
 }
 

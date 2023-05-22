@@ -468,6 +468,122 @@ public class ReadController {
         return pages;
 
     }
+    public String showReadPagesOfBooks(){
+        String msj = " ";
+        int pagesRead = 0;
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                pagesRead += bibliographicProducts.get(i).getAmountReadPages();
+            }
+            msj = pagesRead + " pages of books have been read.";
+        }
+        return msj;
+    }
+    public String showReadPagesOfMagazines(){
+        String msj = " ";
+        int pagesRead = 0;
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                pagesRead += bibliographicProducts.get(i).getAmountReadPages();
+            }
+            msj = pagesRead + " pages of magazines have been read.";
+        }
+        return msj;
+    }
+
+    public String showMostReadGenre(){
+
+        String msj = "";
+        Genre mostReadGenre = null;
+        int mostReadPages = 0;
+
+        int readScienceFictionPages = 0;
+        int readFantasyPages = 0;
+        int readHistoricPages = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                Genre genre = ((Book)bibliographicProducts.get(i)).getBookGenre();
+                int readPages = bibliographicProducts.get(i).getAmountReadPages();
+
+                switch(genre){
+
+                    case SCIENCE_FICTION:
+                        readScienceFictionPages += readPages;
+                        break;
+                    case FANTASY:
+                        readFantasyPages += readPages;
+                        break;
+                    case  HISTORIC_NOVEL:
+                        readHistoricPages += readPages;
+                        break;
+                }
+            }
+        }
+        if(readScienceFictionPages >= readFantasyPages && readScienceFictionPages >= readHistoricPages){
+            mostReadGenre = Genre.SCIENCE_FICTION;
+            mostReadPages = readScienceFictionPages;
+            msj = "The most read genre is:" + mostReadGenre + "\n" + "By a total amount of pages of :" + mostReadPages;
+
+        }else if(readFantasyPages >= readHistoricPages && readFantasyPages >= readScienceFictionPages){
+            mostReadGenre = Genre.FANTASY;
+            mostReadPages = readFantasyPages;
+            msj = "The most read genre is:" + mostReadGenre + "\n" + "By a total amount of pages of :" + mostReadPages;
+        }else{
+            mostReadGenre = Genre.HISTORIC_NOVEL;
+            mostReadPages = readFantasyPages;
+            msj = "The most read genre is:" + mostReadGenre + "\n" + "By a total amount of pages of :" + mostReadPages;
+        }
+
+        return msj;
+    }
+    public String showMostReadCategory(){
+
+        String msj = "";
+        Category mostReadCategory = null;
+        int mostReadPages = 0;
+
+        int readVarietyPages = 0;
+        int readDesignPages = 0;
+        int readCientificPages = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                Category category = ((Magazine)bibliographicProducts.get(i)).getCategory();
+                int readPages = bibliographicProducts.get(i).getAmountReadPages();
+
+                switch(category){
+
+                    case VARIETY:
+                        readVarietyPages += readPages;
+                        break;
+                    case DESIGN:
+                        readDesignPages += readPages;
+                        break;
+                    case  CIENTIFIC:
+                        readCientificPages += readPages;
+                        break;
+                }
+            }
+        }
+        if(readVarietyPages >= readDesignPages && readVarietyPages >= readCientificPages){
+            mostReadCategory = Category.VARIETY;
+            mostReadPages = readVarietyPages;
+            msj = "The most read category is:" + mostReadCategory + "\n" + "By a total amount of pages of :" + mostReadPages;
+
+        }else if(readDesignPages >= readVarietyPages && readDesignPages >= readCientificPages){
+            mostReadCategory = Category.DESIGN;
+            mostReadPages = readDesignPages;
+            msj = "The most read category is:" + mostReadCategory + "\n" + "By a total amount of pages of :" + mostReadPages;
+        }else{
+            mostReadCategory = Category.CIENTIFIC;
+            mostReadPages = readCientificPages;
+            msj = "The most read category is:" + mostReadCategory + "\n" + "By a total amount of pages of :" + mostReadPages;
+        }
+
+        return msj;
+        
+    }
     
     
 }
