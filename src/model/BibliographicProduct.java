@@ -1,7 +1,7 @@
 package model;
 import java.util.UUID;
 
-public abstract class BibliographicProduct {
+public abstract class BibliographicProduct implements Comparable<BibliographicProduct> {
     
     private String uniqueId;
     private String productName;
@@ -90,6 +90,10 @@ public abstract class BibliographicProduct {
     }
     public int getAmountReadPages(){
         return this.amountReadPages;
+    }
+    @Override
+    public int compareTo(BibliographicProduct Object) {
+        return Integer.compare(this.amountReadPages, Object.amountReadPages);
     }
        
 }

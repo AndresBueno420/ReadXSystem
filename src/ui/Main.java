@@ -75,9 +75,12 @@ public class Main{
             case 11:
             showMostReadGenreAndCategory();
                 break;
+            case 12:
+            showTop5Five();
+                break;
 
             case 8:
-            System.out.println("Thanks for ussing the system");
+            System.out.println("Thanks for using the system");
                 break;
             
             default:
@@ -362,6 +365,9 @@ public class Main{
             System.out.println("The product by that id does not exist.");
         }
     }
+    /**
+     * This function prints the message containing the number of read pages of books and magazines.
+     */
     public void showReadPagesProduct(){
         String msjBook = controller.showReadPagesOfBooks();
         String msjMagazine = controller.showReadPagesOfMagazines();
@@ -370,6 +376,9 @@ public class Main{
 
         System.out.println(msjToPrint);
     }
+   /**
+    * The function prints the most read genre and category of books and magazines.
+    */
     public void showMostReadGenreAndCategory(){
         String msjBook = controller.showMostReadGenre();
         String msjMagazine = controller.showMostReadCategory();
@@ -377,6 +386,28 @@ public class Main{
         String msjToPrint = msjBook + "\n" + msjMagazine;
 
         System.out.println(msjToPrint);
+    }
+
+    /**
+     * The function displays the top 5 most read books and magazines if there are enough products
+     * registered, otherwise it displays a message indicating that there are not enough products.
+     */
+    public void showTop5Five(){
+
+        String msjBooks = controller.showTop5Books();
+        String msjMagazines = controller.showTop5Magazines();
+        int controlFlagMag = controller.countBooks();
+        int controlFlagBook = controller.countMagazines();
+
+        if(controlFlagBook >= 5 && controlFlagMag >= 5){
+            System.out.println("The top 5 most read magazines are : ");
+            System.out.println(msjMagazines);
+            System.out.println("The top 5 most read books are :");
+            System.out.println(msjBooks);
+        }
+        else{
+            System.out.println("There are not enough products registered yet.");
+        }
     }
 
 }

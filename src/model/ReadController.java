@@ -2,6 +2,9 @@ package model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+
+import javax.swing.plaf.basic.BasicLookAndFeel;
 
 public class ReadController {
 
@@ -468,6 +471,13 @@ public class ReadController {
         return pages;
 
     }
+   /**
+    * This function calculates the total number of pages read from all the books in a list of
+    * bibliographic products.
+    * 
+    * @return The method is returning a String message that indicates the total amount of pages that
+    * have been read from all the books in the bibliographicProducts list.
+    */
     public String showReadPagesOfBooks(){
         String msj = " ";
         int pagesRead = 0;
@@ -479,6 +489,13 @@ public class ReadController {
         }
         return msj;
     }
+  /**
+   * This function calculates the total number of pages read from all magazines in a list of
+   * bibliographic products.
+   * 
+   * @return The method is returning a String message indicating the total number of pages read from
+   * all the magazines in the bibliographicProducts list.
+   */
     public String showReadPagesOfMagazines(){
         String msj = " ";
         int pagesRead = 0;
@@ -491,6 +508,13 @@ public class ReadController {
         return msj;
     }
 
+  /**
+   * This function determines the most read genre among books in a library and returns a message with
+   * the genre and the total amount of pages read.
+   * 
+   * @return A String message indicating the most read genre and the total amount of pages read for
+   * that genre.
+   */
     public String showMostReadGenre(){
 
         String msj = "";
@@ -584,6 +608,78 @@ public class ReadController {
         return msj;
         
     }
-    
+  /**
+   * The function counts the number of books in a list of bibliographic products.
+   * 
+   * @return The method `countBooks()` returns an integer value which represents the number of books in
+   * the `bibliographicProducts` list.
+   */
+    public int countBooks(){
+        int bookCounter = 0;
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                bookCounter +=1;
+            }
+        }
+        return bookCounter;
+    }
+   /**
+    * The function counts the number of Magazine objects in a list of bibliographic products.
+    * 
+    * @return The method is returning an integer value which represents the number of magazines in the
+    * bibliographicProducts list.
+    */
+    public int countMagazines(){
+        int magazineCounter = 0;
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                magazineCounter +=1;
+            }
+        }
+        return magazineCounter;
+    }
+  /**
+   * The function returns a string with the top 5 magazines sorted by the amount of read pages.
+   * 
+   * @return The method is returning a String that contains the names and amount of pages of the top 5
+   * magazines in the bibliographicProducts list.
+   */
+    public String showTop5Magazines(){
+
+        String msj = "";
+        int positionCounter = 1;
+        Collections.sort(bibliographicProducts);
+
+        for(int i = 0; i < bibliographicProducts.size(); i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                Category category = ((Magazine)bibliographicProducts.get(i)).getCategory();
+                msj += positionCounter + "." + bibliographicProducts.get(i).getProductName() + ", and the amount of pages is: " + bibliographicProducts.get(i).getAmountReadPages() + "The category is: " + category + "\n" ;
+                positionCounter += 1;
+            }
+        }
+        return msj;
+    }
+    /**
+     * The function returns a string with the top 5 books sorted by the amount of pages read.
+     * 
+     * @return The method is returning a String that contains the top 5 books in the
+     * bibliographicProducts list, sorted by the amount of pages they have. The String includes the
+     * position of the book in the top 5, the name of the book, and the amount of pages it has.
+     */
+    public String showTop5Books(){
+
+        String msj = "";
+        int positionCounter = 1;
+        Collections.sort(bibliographicProducts);
+
+        for(int i = 0; i < bibliographicProducts.size(); i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                Genre genre =  ((Book)bibliographicProducts.get(i)).getBookGenre();
+                msj += positionCounter + "." + bibliographicProducts.get(i).getProductName() + ",the amount of pages is: " + bibliographicProducts.get(i).getAmountReadPages() + ",and the genre is:" + genre +  "\n" ;
+                positionCounter += 1;
+            }
+        }
+        return msj;
+    }
     
 }
