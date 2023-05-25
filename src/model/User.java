@@ -66,5 +66,28 @@ public abstract class User {
     * @return A String is being returned.
     */
     public abstract String addProduct(BibliographicProduct product);
+
+   /**
+    * This function sorts a list of BibliographicProducts by their publication date using a bubble sort
+    * algorithm.
+    */
+    public void sortProductsByPublicationDate() {
+        
+        int size = inventory.size();
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                BibliographicProduct currentProduct = inventory.get(j);
+                BibliographicProduct nextProduct = inventory.get(j + 1);
+                if (currentProduct.getPublicationDate().after(nextProduct.getPublicationDate())) {
+
+                    inventory.set(j, nextProduct);
+                    inventory.set(j + 1, currentProduct);
+                }
+            }
+        }
+    }
+
+
        
 }

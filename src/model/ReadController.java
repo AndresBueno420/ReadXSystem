@@ -68,7 +68,7 @@ public class ReadController {
      * @return The method is returning a String message that confirms the registration of a
      * bibliographic product and includes the unique ID of the product.
      */
-    public String registBiblioProduct(String productName, int bookPages, String publicationDate, String productPrice, int magCategory, int emPeriodicity){
+    public String registBiblioProduct(String productName, int bookPages, Calendar publicationDate, double productPrice, int magCategory, int emPeriodicity){
 
         Category magKind;
         Periodicity magPeriod;
@@ -117,7 +117,7 @@ public class ReadController {
     * @return The method is returning a message that confirms the registration of a book and includes
     * its unique ID.
     */
-    public String registBiblioProduct(String productName, int bookPages, String publicationDate, String productPrice, int bookGenre){
+    public String registBiblioProduct(String productName, int bookPages, Calendar publicationDate, double productPrice, int bookGenre){
 
         Genre bookType;
 
@@ -223,7 +223,7 @@ public class ReadController {
    * @return A message indicating whether the price of the product with the given ID has been updated
    * or if the product has not been found.
    */
-    public String modifyProductPrice(String id, String newPrice){
+    public String modifyProductPrice(String id, double newPrice){
 
         String msj = " ";
         for(int i = 0; i < bibliographicProducts.size(); i++){
@@ -422,8 +422,8 @@ public class ReadController {
      */
     public void testCase(){
 
-        BibliographicProduct book = new Book("100 Anios de soledad", 320, "01/10", "87000", Genre.HISTORIC_NOVEL);
-        BibliographicProduct magazine = new Magazine(null, 0, null, null, null, null);
+        BibliographicProduct book = new Book("100 Anios de soledad", 320, null, 87000, Genre.HISTORIC_NOVEL);
+        BibliographicProduct magazine = new Magazine(null, 0, null, 98000, null, null);
         User regularUser = new regularUser("Andres", "1117349952");
         User premiumUser = new premiumUser("Alejo", "24604311");
 
@@ -680,6 +680,130 @@ public class ReadController {
             }
         }
         return msj;
+    }
+   /**
+    * The function counts the number of copies sold and the total sales value of fantasy books in a
+    * list of bibliographic products.
+    * 
+    * @return The method is returning a String message that includes the total number of copies sold
+    * and the total sales value of all the books in the bibliographicProducts list that have a genre of
+    * FANTASY.
+    */
+    public String countFantasySales(){
+        
+        String msj = "";
+        int copiesCount = 0;
+        int salesCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                Genre genre = ((Book)bibliographicProducts.get(i)).getBookGenre();
+                if( genre == Genre.FANTASY){
+                    double localCount = ((Book)bibliographicProducts.get(i)).getCopiesSold() * bibliographicProducts.get(i).getProductPrice();
+                    salesCount += localCount;
+                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                }
+            }
+        }
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+
+        return msj;
+    }
+    /**
+     * This Java function counts the number of copies sold and total sales value for all science
+     * fiction books in a list of bibliographic products.
+     * 
+     * @return The method is returning a String message that includes the total number of copies sold
+     * and the total sales value of all the books in the Science Fiction genre.
+     */
+    public String countScienceFictionSales(){
+        
+        String msj = "";
+        int copiesCount = 0;
+        int salesCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                Genre genre = ((Book)bibliographicProducts.get(i)).getBookGenre();
+                if( genre == Genre.SCIENCE_FICTION){
+                    double localCount = ((Book)bibliographicProducts.get(i)).getCopiesSold() * bibliographicProducts.get(i).getProductPrice();
+                    salesCount += localCount;
+                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                }
+            }
+        }
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+
+        return msj;
+    }
+   /**
+    * This function counts the number of copies sold and the total sales value of historic novels in a
+    * list of bibliographic products.
+    * 
+    * @return The method returns a String message that includes the total number of copies sold and the
+    * total sales value of all historic novels in the bibliographicProducts list.
+    */
+    public String countHistoricSales(){
+        
+        String msj = "";
+        int copiesCount = 0;
+        int salesCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Book){
+                Genre genre = ((Book)bibliographicProducts.get(i)).getBookGenre();
+                if( genre == Genre.HISTORIC_NOVEL){
+                    double localCount = ((Book)bibliographicProducts.get(i)).getCopiesSold() * bibliographicProducts.get(i).getProductPrice();
+                    salesCount += localCount;
+                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                }
+            }
+        }
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+
+        return msj;
+    }
+   /**
+    * This Java function converts a string representation of a date in the format "dd/MM/yyyy" to a
+    * Calendar object.
+    * 
+    * @param date The date parameter is a string representing a date in the format "dd/MM/yyyy".
+    * @return A Calendar object is being returned.
+    */
+    public Calendar convertStringToCalendar(String date) throws Exception{
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        Calendar newDate = Calendar.getInstance();
+        newDate.setTime(formatter.parse(date));
+
+        return newDate; 
+    }
+
+   /**
+    * This Java function checks if a list of bibliographic products is empty and returns a boolean
+    * value.
+    * 
+    * @return The method is returning a boolean value, which indicates whether the
+    * bibliographicProducts list is empty or not. If the list is empty, the method will return true,
+    * otherwise it will return false.
+    */
+    public boolean checkProductsEmpty(){
+
+        boolean flag = bibliographicProducts.isEmpty();
+
+        return flag;
+    }
+   /**
+    * This Java function checks if a list of users is empty and returns a boolean value.
+    * 
+    * @return A boolean value indicating whether the "users" collection is empty or not.
+    */
+    public boolean checkUsersEmpty(){
+
+        boolean flag = users.isEmpty();
+
+        return flag;
     }
     
 }

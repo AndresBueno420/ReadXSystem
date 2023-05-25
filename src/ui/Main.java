@@ -2,6 +2,7 @@ package ui;
 
 import java.util.Scanner;
 import model.ReadController;
+import java.util.Calendar;
 
 public class Main{
 
@@ -13,7 +14,7 @@ public class Main{
         reader = new Scanner(System.in);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args)throws Exception{
 
         Main main = new Main();
         int option = 0;
@@ -46,7 +47,7 @@ public class Main{
 
     }
 
-    public void executeOption(int option){
+    public void executeOption(int option)throws Exception{
         switch(option){
             case 1:
             registerNewUser();
@@ -115,7 +116,7 @@ public class Main{
      * This function registers a new user by taking input for their name, identification, and type of
      * user, and then calling a controller method to register the user.
      */
-    public void registerNewUser(){
+    public void registerNewUser() {
         System.out.println("Type the user's Name");
         String name = reader.next();
 
@@ -135,12 +136,13 @@ public class Main{
      * This function allows the user to register a new book or magazine product with various attributes
      * and categories.
      */
-    public void registerNewProduct(){
+    public void registerNewProduct() throws Exception{
 
         String productName = " ";
         int bookPages = 0;
         String publicationDate = " ";
-        String productPrice = " ";
+        double productPrice = 0;
+        Calendar publicDate = null;
         int magCategory = 0;
         int emPeriodicity = 0;
         int bookType = 0;
@@ -162,8 +164,9 @@ public class Main{
             System.out.println("Type the publication date: ");
             reader.next();
             publicationDate = reader.nextLine();
+            publicDate = controller.convertStringToCalendar(publicationDate);
             System.out.println("Type the price of the magazine: ");
-            productPrice = reader.next();
+            productPrice = reader.nextDouble();
 
             System.out.println("Choose the magazine's category:");
             System.out.println("1. Variety");
@@ -180,7 +183,7 @@ public class Main{
 
             emPeriodicity = reader.nextInt();
 
-            String msg = controller.registBiblioProduct(productName, bookPages, publicationDate, productPrice, magCategory, emPeriodicity);
+            String msg = controller.registBiblioProduct(productName, bookPages, publicDate, productPrice, magCategory, emPeriodicity);
 
             System.out.println(msg);
 
@@ -193,8 +196,9 @@ public class Main{
             System.out.println("Type the publication date: ");
             reader.next();
             publicationDate = reader.nextLine();
+            publicDate = controller.convertStringToCalendar(publicationDate);
             System.out.println("Type the price of the book: ");
-            productPrice = reader.next();
+            productPrice = reader.nextDouble();
 
             System.out.println("Choose the book's genre: ");
             System.out.println("1. Science Fiction. ");
@@ -203,18 +207,26 @@ public class Main{
 
             bookType = reader.nextInt();
 
-            String msg2 = controller.registBiblioProduct(productName, bookPages, publicationDate, productPrice, bookType);
+            String msg2 = controller.registBiblioProduct(productName, bookPages, publicDate, productPrice, bookType);
 
             System.out.println(msg2);
         }
     }
     public void deleteProduct(){
 
-        System.out.println("Type the name of the product that is going to be deleted:");
-        String productName = reader.next();
+        boolean controlFlag = controller.checkProductsEmpty();
 
-        String msj = controller.deleteProduct(productName);
-        System.out.println(msj);
+        if(controlFlag == false){
+            System.out.println("Type the name of the product that is going to be deleted:");
+            String productName = reader.next();
+    
+            String msj = controller.deleteProduct(productName);
+            System.out.println(msj);
+        }
+        else{
+            System.out.println("There is no product registered yet.");
+        }
+
     }
 
    /**
@@ -223,20 +235,30 @@ public class Main{
     */
     public void buyBook(){
 
-        System.out.println("Type the user name:");
-        String name = reader.next();
+        boolean userFlag = controller.checkUsersEmpty();
+        boolean productsFlag = controller.checkProductsEmpty();
 
-        String menu = controller.displayBooks();
-        System.out.println(menu);
-        System.out.println("-------------------");
+        if(userFlag == false && productsFlag == false){
+            System.out.println("Type the user name:");
+            String name = reader.next();
 
-        System.out.println("Type the book to buy: ");
-        reader.next();
-        String bookName = reader.nextLine();
+            String menu = controller.displayBooks();
+             System.out.println(menu);
+             System.out.println("-------------------");
 
-        String msj = controller.buyBook(name, bookName);
+            System.out.println("Type the book to buy: ");
+            reader.next();
+            String bookName = reader.nextLine();
 
-        System.out.println(msj);
+            String msj = controller.buyBook(name, bookName);
+
+            System.out.println(msj);
+        }
+        else{
+            System.out.println("There is no products or users registered.");
+        }
+
+       
     }
    /**
     * This function allows a user to subscribe to a magazine by selecting a magazine from a list and
@@ -244,20 +266,29 @@ public class Main{
     */
     public void subscribeMagazine(){
 
-        System.out.println("Type the user name:");
-        String name = reader.next();
+        boolean userFlag = controller.checkUsersEmpty();
+        boolean productsFlag = controller.checkProductsEmpty();
 
-        String menu = controller.displayMagazines();
-        System.out.println(menu);
-        System.out.println("-------------------");
+        if(userFlag == false && productsFlag == false){
+            System.out.println("Type the user name:");
+            String name = reader.next();
 
-        System.out.println("Type the magazine's name: ");
-        reader.next();
-        String bookName = reader.nextLine();
+            String menu = controller.displayMagazines();
+            System.out.println(menu);
+            System.out.println("-------------------");
 
-        String msj = controller.buyMagazine(name, bookName);
+            System.out.println("Type the magazine's name: ");
+            reader.next();
+            String bookName = reader.nextLine();
 
-        System.out.println(msj);
+            String msj = controller.buyMagazine(name, bookName);
+
+            System.out.println(msj);
+        }
+        else{
+            System.out.println("There is no products or users registered yet. ");
+        }
+       
     }
     /**
      * The function "modifyMenu" prints out options to change the name, pages, or prices of a menu.
@@ -274,50 +305,61 @@ public class Main{
      * option and entering the new information.
      */
     public void modifyProduct(){
-        modifyMenu();
+
+        boolean productFlag = controller.checkProductsEmpty();
         String productId = " ";
         String newProductName = " ";
         String msj = " ";
-        String newProductPrice = " ";
+        double newProductPrice = 0;
         int newPages = 0;
-        System.out.println("------------------");
-        System.out.println("Choose your option : ");
-        int option = reader.nextInt();
 
-        switch(option){
-            case 1:
-            System.out.println("Type the product id.");
-            productId = reader.next();
-            System.out.println("Type the new name:");
-            reader.next();
-            newProductName = reader.nextLine();
+        if(productFlag == false){
+            modifyMenu();
+            System.out.println("------------------");
+            System.out.println("Choose your option : ");
+            int option = reader.nextInt();
 
-            msj = controller.modifyProductName(productId, newProductName);
-            System.out.println(msj);
+            switch(option){
+                case 1:
+                System.out.println("Type the product id.");
+                productId = reader.next();
+                System.out.println("Type the new name:");
+                reader.next();
+                newProductName = reader.nextLine();
 
-            break;
-            case 2:
-            System.out.println("Type the product id.");
-            productId = reader.next();
-            System.out.println("Type the new amount of pages:");
-            newPages = reader.nextInt();
+                msj = controller.modifyProductName(productId, newProductName);
+                System.out.println(msj);
 
-            msj = controller.modifyProductPages(productId, newPages);
-            System.out.println(msj);
+                    break;
+                case 2:
+                System.out.println("Type the product id.");
+                productId = reader.next();
+                System.out.println("Type the new amount of pages:");
+                newPages = reader.nextInt();
 
-            break;
-            case 3:
-            System.out.println("Type the product id.");
-            productId = reader.next();
-            System.out.println("Type the new price:");
-            newProductPrice = reader.next();
+                msj = controller.modifyProductPages(productId, newPages);
+                System.out.println(msj);
 
-            msj = controller.modifyProductPrice(productId, newProductPrice);
-            System.out.println(msj);
+                    break;
+                case 3:
+                System.out.println("Type the product id.");
+                productId = reader.next();
+                System.out.println("Type the new price:");
+                newProductPrice = reader.nextDouble();
 
-            break;
+                msj = controller.modifyProductPrice(productId, newProductPrice);
+                System.out.println(msj);
 
+                    break;
+
+            }
         }
+        else{
+
+            System.out.println("There are no products registered yet.");
+        }
+
+        
     }
     /**
      * This function simulates a lecture session for a book, allowing the user to navigate through its
@@ -325,67 +367,92 @@ public class Main{
      */
     public void lectureSession(){
 
+        boolean userFlag = controller.checkUsersEmpty();
+        boolean productFlag = controller.checkProductsEmpty();
+
         String productId = "";
         String productName = "";
         int bookPages = 0;
         int counterPages = 1;
         int option = 0;
 
-        System.out.println("Type the id of the product:");
-        productId = reader.next();
+        if(userFlag == false && productFlag == false){
+            System.out.println("Type the id of the product:");
+            productId = reader.next();
 
-        productName = controller.returnProductName(productId);
-        bookPages = controller.returnBookPages(productId);
+            productName = controller.returnProductName(productId);
+            bookPages = controller.returnBookPages(productId);
 
-        if(productName != "" && bookPages != 0){
-            do{
-                System.out.println("Lecture session in progress: " + "\n");
-                System.out.println("Reading: " + productName);
-                System.out.println(" ");
-                System.out.println(" ");
-                System.out.println("Reading page " + counterPages + " of" + bookPages);
-                System.out.println(" ");
-                System.out.println("1. Next page.");
-                System.out.println("2. Previous page.");
-                System.out.println("3. Finish the lecture session.");
-                option = reader.nextInt();
+            if(productName != "" && bookPages != 0){
+                do{
+                    System.out.println("Lecture session in progress: " + "\n");
+                    System.out.println("Reading: " + productName);
+                    System.out.println(" ");
+                    System.out.println(" ");
+                    System.out.println("Reading page " + counterPages + " of" + bookPages);
+                    System.out.println(" ");
+                    System.out.println("1. Next page.");
+                    System.out.println("2. Previous page.");
+                    System.out.println("3. Finish the lecture session.");
+                    option = reader.nextInt();
     
-                if(option == 1){
+                    if(option == 1){
     
                     counterPages++;
-                }
-                else if(option == 2){
+                    }
+                    else if(option == 2){
     
                     counterPages--;
-                }
-            }while(option != 3 || counterPages != bookPages );
+                    }
+                }while(option != 3 || counterPages != bookPages );
 
+            }
+            else{
+                System.out.println("The product by that id does not exist.");
+            }
         }
         else{
-            System.out.println("The product by that id does not exist.");
+            System.out.println("There is no product or user registered yet.");
         }
+        
     }
     /**
      * This function prints the message containing the number of read pages of books and magazines.
      */
     public void showReadPagesProduct(){
-        String msjBook = controller.showReadPagesOfBooks();
-        String msjMagazine = controller.showReadPagesOfMagazines();
+        boolean productFlag = controller.checkProductsEmpty();
+        if(productFlag ==  false){
+            String msjBook = controller.showReadPagesOfBooks();
+            String msjMagazine = controller.showReadPagesOfMagazines();
 
-        String msjToPrint = msjBook + "\n" + msjMagazine;
+            String msjToPrint = msjBook + "\n" + msjMagazine;
 
-        System.out.println(msjToPrint);
+            System.out.println(msjToPrint);
+        }
+        else{
+            System.out.println("There is no product registered yet. ");
+        }
+       
     }
    /**
     * The function prints the most read genre and category of books and magazines.
     */
     public void showMostReadGenreAndCategory(){
-        String msjBook = controller.showMostReadGenre();
-        String msjMagazine = controller.showMostReadCategory();
 
-        String msjToPrint = msjBook + "\n" + msjMagazine;
+        boolean productflag = controller.checkProductsEmpty();
 
-        System.out.println(msjToPrint);
+        if(productflag == false){
+            String msjBook = controller.showMostReadGenre();
+            String msjMagazine = controller.showMostReadCategory();
+    
+            String msjToPrint = msjBook + "\n" + msjMagazine;
+    
+            System.out.println(msjToPrint);
+        }
+        else{
+            System.out.println("There is no product registered yet.");
+        }
+       
     }
 
     /**
@@ -394,20 +461,28 @@ public class Main{
      */
     public void showTop5Five(){
 
-        String msjBooks = controller.showTop5Books();
-        String msjMagazines = controller.showTop5Magazines();
-        int controlFlagMag = controller.countBooks();
-        int controlFlagBook = controller.countMagazines();
+        boolean productFlag = controller.checkProductsEmpty();
 
-        if(controlFlagBook >= 5 && controlFlagMag >= 5){
-            System.out.println("The top 5 most read magazines are : ");
-            System.out.println(msjMagazines);
-            System.out.println("The top 5 most read books are :");
-            System.out.println(msjBooks);
+        if(productFlag == false){
+            String msjBooks = controller.showTop5Books();
+            String msjMagazines = controller.showTop5Magazines();
+            int controlFlagMag = controller.countBooks();
+            int controlFlagBook = controller.countMagazines();
+
+            if(controlFlagBook >= 5 && controlFlagMag >= 5){
+                System.out.println("The top 5 most read magazines are : ");
+                System.out.println(msjMagazines);
+                System.out.println("The top 5 most read books are :");
+                System.out.println(msjBooks);
+            }
+            else{
+            System.out.println("There are not enough products registered yet.");
+            }
         }
         else{
-            System.out.println("There are not enough products registered yet.");
+            System.out.println("There are no products registered yet.");
         }
+        
     }
 
 }

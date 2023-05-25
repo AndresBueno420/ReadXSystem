@@ -1,5 +1,6 @@
 package model;
 import java.util.UUID;
+import java.util.Calendar;
 
 public abstract class BibliographicProduct implements Comparable<BibliographicProduct> {
     
@@ -7,12 +8,12 @@ public abstract class BibliographicProduct implements Comparable<BibliographicPr
     private String productName;
     private int bookPages;
 
-    private String publicationDate;
-    private String productPrice;
+    private Calendar publicationDate;
+    private double productPrice;
     private int amountReadPages;
     
 
-    public BibliographicProduct(String productName, int bookPages, String publicationDate, String productPrice){
+    public BibliographicProduct(String productName, int bookPages, Calendar publicationDate, double productPrice){
         this.productName = productName;
         this.bookPages = bookPages;
         this.publicationDate = publicationDate;
@@ -76,7 +77,7 @@ public abstract class BibliographicProduct implements Comparable<BibliographicPr
     * @param newProductPrice The new price value that will be assigned to the productPrice attribute of
     * an object.
     */
-    public void setProductPrice(String newProductPrice){
+    public void setProductPrice(double newProductPrice){
         this.productPrice = newProductPrice;
     }
     /**
@@ -85,15 +86,41 @@ public abstract class BibliographicProduct implements Comparable<BibliographicPr
      * @return The method `getProductPrice()` is returning a `String` value which represents the price
      * of a product.
      */
-    public String getProductPrice(){
+    public double getProductPrice(){
         return this.productPrice;
     }
+    /**
+     * This function returns the amount of pages that have been read.
+     * 
+     * @return The method `getAmountReadPages()` is returning an integer value which represents the
+     * amount of pages that have been read.
+     */
     public int getAmountReadPages(){
         return this.amountReadPages;
     }
+    /**
+     * This is a Java function that compares the amount of pages read between two BibliographicProduct
+     * objects.
+     * 
+     * @param Object The parameter "Object" is the object of the class "BibliographicProduct" that we
+     * are comparing to the current object.
+     * @return The method is returning an integer value that represents the comparison between the
+     * amount of pages read in the current object and the amount of pages read in the object passed as
+     * a parameter. The comparison is done using the `Integer.compare()` method, which returns a
+     * negative integer, zero, or a positive integer depending on whether the first argument is less
+     * than, equal to, or greater than the second argument.
+     */
     @Override
     public int compareTo(BibliographicProduct Object) {
         return Integer.compare(this.amountReadPages, Object.amountReadPages);
+    }
+    /**
+     * This function returns the publication date as a Calendar object.
+     * 
+     * @return A Calendar object representing the publication date.
+     */
+    public Calendar getPublicationDate(){
+        return this.publicationDate;
     }
        
 }
