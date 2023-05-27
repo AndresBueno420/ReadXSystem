@@ -350,7 +350,7 @@ public class Main{
                 msj = controller.modifyProductPrice(productId, newProductPrice);
                 System.out.println(msj);
 
-                    break;
+                    break; 
 
             }
         }
@@ -484,5 +484,54 @@ public class Main{
         }
         
     }
+
+    public void showCategoriesSales(){
+
+        boolean productFlag = controller.checkProductsEmpty();
+
+        if(productFlag == false){
+
+            System.out.println("For the variety magazine category: ");
+            String varietyMsj = controller.countVarietySales();
+            System.out.println(varietyMsj);
+
+            System.out.println("For the design magazine category: ");
+            String designMsj = controller.countDesignSales();
+            System.out.println(designMsj);
+
+            System.out.println("For the cientific magazine category: ");
+            String cientificMsj = controller.countCientificSales();
+            System.out.println(cientificMsj);
+
+        }else{
+            System.out.println("There are no products registered yet.");
+        }
+
+    }
+
+    public void showGenreSales(){
+
+        boolean productFlag = controller.checkProductsEmpty();
+
+        if(productFlag == false){
+
+            System.out.println("For the Science fiction genre: ");
+            String scienceFicMsj = controller.countScienceFictionSales();
+            System.out.println(scienceFicMsj);
+
+            System.out.println("For the design magazine category: ");
+            String fantasyMsj = controller.countFantasySales();
+            System.out.println(fantasyMsj);
+
+            System.out.println("For the cientific magazine category: ");
+            String historicNovelMsj = controller.countHistoricSales();
+            System.out.println(historicNovelMsj);
+
+        }else{
+            System.out.println("There are no products registered yet.");
+        }
+
+    }
+
 
 }

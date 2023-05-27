@@ -16,6 +16,7 @@ public abstract class User {
 
         this.userName = userName;
         this.identification = identification;
+        inventory = new ArrayList<>();
         setLinkDate();
        
     }
@@ -86,6 +87,40 @@ public abstract class User {
                 }
             }
         }
+    }
+    /**
+     * This Java function searches for a BibliographicProduct in an inventory by its name and returns
+     * it.
+     * 
+     * @param productName a String representing the name of a product that needs to be searched in an
+     * inventory of BibliographicProducts. The method searches for a BibliographicProduct object in the
+     * inventory that has the same name as the productName parameter and returns it. If no such product
+     * is found, the method returns null.
+     * @return The method is returning a BibliographicProduct object.
+     */
+    public BibliographicProduct searchProduct(String productName){
+
+        boolean foundProject = false;
+        BibliographicProduct product = null;
+
+        for(int i = 0; i < inventory.size() && !foundProject;i++){
+            if(inventory.get(i).getProductName().equalsIgnoreCase(productName)){
+                foundProject = true;
+                product = inventory.get(i);
+            }
+        }
+        return product;
+    }
+
+   /**
+    * This function deletes a bibliographic product from the inventory.
+    * 
+    * @param product The parameter "product" is an object of the class "BibliographicProduct" that
+    * represents a product in the inventory that needs to be deleted. The method "deleteProduct" takes
+    * this object as input and removes it from the inventory.
+    */
+    public void deleteProduct(BibliographicProduct product){
+        inventory.remove(product);
     }
 
 

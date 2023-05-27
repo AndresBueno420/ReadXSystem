@@ -31,5 +31,14 @@ public class Magazine extends BibliographicProduct {
    public Category getCategory(){
         return this.magCategory;
    }
+   /**
+    * This Java function returns the number of active subscriptions.
+    * 
+    * @return The method is returning an integer value which represents the number of active
+    * subscriptions.
+    */
+   public int getActiveSubscriptions(){
+        return this.activeSubscription;
+   }
     
 }

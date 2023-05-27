@@ -4,17 +4,17 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 
-import javax.swing.plaf.basic.BasicLookAndFeel;
 
 public class ReadController {
 
     ArrayList<User> users;
     ArrayList<BibliographicProduct> bibliographicProducts;
-    ArrayList<String> dates;
+    ArrayList<Bill> bills;
 
     public ReadController(){
         users = new ArrayList<>();
         bibliographicProducts = new ArrayList<>();
+        bills = new ArrayList<>();
         testCase();
     }
     /**
@@ -150,7 +150,7 @@ public class ReadController {
     */
     public String deleteProduct(String productName){
 
-        String msj = " ";
+        String msj = "";
         boolean foundProduct = false; 
 
         for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
@@ -161,10 +161,17 @@ public class ReadController {
                 foundProduct = true;
                 
             }
-            else{
-                msj = "The product has not been found. ";
+            if(!foundProduct){
+                msj = "The product has not been found.";
             }
         }
+        for(int j = 0; j < users.size(); j ++){
+            User user = users.get(j);
+            BibliographicProduct product2 = user.searchProduct(productName);
+            if(product2 != null){
+                user.deleteProduct(product2);
+            }
+        }   
         return msj;
     }
  /**
@@ -289,19 +296,25 @@ public class ReadController {
                         ((Book)bibliographicProducts.get(i)).setCopiesSold();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
-                        dates.add(buyDate);
+                        double billPrice = product.getProductPrice();
+                        String id = product.getUniqueId();
+                        Bill bill = new Bill(billPrice, buyDate, id );
+                        bills.add(bill);
+
                         msj = ((regularUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyDate + "\n" + "by a price of " +  product.getProductPrice() ;
 
                         
                     }
                     else if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof premiumUser){
 
-                        foundUser = true;
                         Calendar calendar = Calendar.getInstance();
                         ((Book)bibliographicProducts.get(i)).setCopiesSold();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
-                        dates.add(buyDate);
+                        double billPrice = product.getProductPrice();
+                        String id = product.getUniqueId();
+                        Bill bill = new Bill(billPrice, buyDate, id );
+                        bills.add(bill);
                         msj = ((premiumUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyDate + "\n" + "by a price of " +  product.getProductPrice() ;
                     }
                     else{
@@ -350,7 +363,10 @@ public class ReadController {
                         ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyingDate = dateFormat.format(calendar.getTime());
-                        dates.add(buyingDate);
+                        double billPrice = product.getProductPrice();
+                        String id = product.getUniqueId();
+                        Bill bill = new Bill(billPrice, buyingDate, id );
+                        bills.add(bill);
                         msj = ((regularUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyingDate + "\n" + "by a price of " +  product.getProductPrice() ;
 
                         
@@ -362,7 +378,11 @@ public class ReadController {
                         ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyingDate = dateFormat.format(calendar.getTime());
-                        dates.add(buyingDate);
+                        double billPrice = product.getProductPrice();
+                        String id = product.getUniqueId();
+                        Bill bill = new Bill(billPrice, buyingDate, id );
+                        bills.add(bill);
+
                         msj = ((premiumUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyingDate + "\n" + "by a price of " +  product.getProductPrice() ;
                     }
                     else{
@@ -553,7 +573,11 @@ public class ReadController {
             mostReadGenre = Genre.FANTASY;
             mostReadPages = readFantasyPages;
             msj = "The most read genre is:" + mostReadGenre + "\n" + "By a total amount of pages of :" + mostReadPages;
-        }else{
+        }else if( readFantasyPages == readHistoricPages && readHistoricPages == readScienceFictionPages){
+            
+            msj = "No products has been read yet.";
+        }
+        else{
             mostReadGenre = Genre.HISTORIC_NOVEL;
             mostReadPages = readFantasyPages;
             msj = "The most read genre is:" + mostReadGenre + "\n" + "By a total amount of pages of :" + mostReadPages;
@@ -599,7 +623,11 @@ public class ReadController {
             mostReadCategory = Category.DESIGN;
             mostReadPages = readDesignPages;
             msj = "The most read category is:" + mostReadCategory + "\n" + "By a total amount of pages of :" + mostReadPages;
-        }else{
+        }else if ( readCientificPages == readDesignPages && readDesignPages == readVarietyPages){
+
+            msj = "No product has been read yet.";
+        }
+        else{
             mostReadCategory = Category.CIENTIFIC;
             mostReadPages = readCientificPages;
             msj = "The most read category is:" + mostReadCategory + "\n" + "By a total amount of pages of :" + mostReadPages;
@@ -651,7 +679,7 @@ public class ReadController {
         Collections.sort(bibliographicProducts);
 
         for(int i = 0; i < bibliographicProducts.size(); i++){
-            if(bibliographicProducts.get(i) instanceof Magazine){
+            if(bibliographicProducts.get(i) instanceof Magazine && positionCounter < 6){
                 Category category = ((Magazine)bibliographicProducts.get(i)).getCategory();
                 msj += positionCounter + "." + bibliographicProducts.get(i).getProductName() + ", and the amount of pages is: " + bibliographicProducts.get(i).getAmountReadPages() + "The category is: " + category + "\n" ;
                 positionCounter += 1;
@@ -673,7 +701,7 @@ public class ReadController {
         Collections.sort(bibliographicProducts);
 
         for(int i = 0; i < bibliographicProducts.size(); i++){
-            if(bibliographicProducts.get(i) instanceof Book){
+            if(bibliographicProducts.get(i) instanceof Book && positionCounter < 6){
                 Genre genre =  ((Book)bibliographicProducts.get(i)).getBookGenre();
                 msj += positionCounter + "." + bibliographicProducts.get(i).getProductName() + ",the amount of pages is: " + bibliographicProducts.get(i).getAmountReadPages() + ",and the genre is:" + genre +  "\n" ;
                 positionCounter += 1;
@@ -754,6 +782,88 @@ public class ReadController {
                 Genre genre = ((Book)bibliographicProducts.get(i)).getBookGenre();
                 if( genre == Genre.HISTORIC_NOVEL){
                     double localCount = ((Book)bibliographicProducts.get(i)).getCopiesSold() * bibliographicProducts.get(i).getProductPrice();
+                    salesCount += localCount;
+                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                }
+            }
+        }
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+
+        return msj;
+    }
+    /**
+     * This function counts the number of copies sold and the total sales value for all books in the
+     * "variety" category.
+     * 
+     * @return The method is returning a String message that includes the total number of copies sold
+     * and the total sales value for all the products in the bibliographicProducts list that are
+     * magazines with a category of VARIETY.
+     */
+    public String countVarietySales(){
+        
+        String msj = "";
+        int copiesCount = 0;
+        int salesCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                Category category = ((Magazine)bibliographicProducts.get(i)).getCategory();
+                if( category == Category.VARIETY){
+                    double localCount = ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions() * bibliographicProducts.get(i).getProductPrice();
+                    salesCount += localCount;
+                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                }
+            }
+        }
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+
+        return msj;
+    }
+    /**
+     * The function counts the number of copies sold and the total sales value of magazines in the
+     * design category.
+     * 
+     * @return The method is returning a String message that includes the total number of copies sold
+     * and the total sales value of all magazines in the DESIGN category.
+     */
+    public String countDesignSales(){
+        
+        String msj = "";
+        int copiesCount = 0;
+        int salesCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                Category category = ((Magazine)bibliographicProducts.get(i)).getCategory();
+                if( category == Category.DESIGN){
+                    double localCount = ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions() * bibliographicProducts.get(i).getProductPrice();
+                    salesCount += localCount;
+                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                }
+            }
+        }
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+
+        return msj;
+    }
+   /**
+    * This Java function counts the number of copies sold and the total sales value of scientific
+    * magazines in a list of bibliographic products.
+    * 
+    * @return The method returns a String message that includes the total number of copies sold and the
+    * total sales value of all the magazines in the CIENTIFIC category.
+    */
+    public String countCientificSales(){
+        
+        String msj = "";
+        int copiesCount = 0;
+        int salesCount = 0;
+
+        for(int i = 0; i < bibliographicProducts.size();i++){
+            if(bibliographicProducts.get(i) instanceof Magazine){
+                Category category = ((Magazine)bibliographicProducts.get(i)).getCategory();
+                if( category == Category.CIENTIFIC){
+                    double localCount = ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions() * bibliographicProducts.get(i).getProductPrice();
                     salesCount += localCount;
                     copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
                 }
