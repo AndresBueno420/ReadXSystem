@@ -122,6 +122,12 @@ public abstract class BibliographicProduct implements Comparable<BibliographicPr
     public Calendar getPublicationDate(){
         return this.publicationDate;
     }
+    /**
+     * This function increases the amount of pages read by 1.
+     */
+    public void increaseReadPages(){
+        this.amountReadPages += 1;
+    }
        
 }
 

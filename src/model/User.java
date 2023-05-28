@@ -111,6 +111,28 @@ public abstract class User {
         }
         return product;
     }
+    /**
+     * This Java function searches for a bibliographic product in an inventory by its unique ID and
+     * returns it.
+     * 
+     * @param productId a String representing the unique identifier of a bibliographic product that
+     * needs to be searched in the inventory. The method searches for the product in the inventory list
+     * and returns the product object if found, otherwise it returns null.
+     * @return The method `searchProductById` returns a `BibliographicProduct` object.
+     */
+    public BibliographicProduct searchProductById(String productId){
+
+        boolean foundProject = false;
+        BibliographicProduct product = null;
+
+        for(int i = 0; i < inventory.size() && !foundProject;i++){
+            if(inventory.get(i).getUniqueId().equalsIgnoreCase(productId)){
+                foundProject = true;
+                product = inventory.get(i);
+            }
+        }
+        return product;
+    }
 
    /**
     * This function deletes a bibliographic product from the inventory.
@@ -121,6 +143,15 @@ public abstract class User {
     */
     public void deleteProduct(BibliographicProduct product){
         inventory.remove(product);
+    }
+   /**
+    * This function returns the inventory of bibliographic products sorted by publication date.
+    * 
+    * @return An ArrayList of BibliographicProduct objects sorted by their publication date.
+    */
+    public ArrayList<BibliographicProduct> getInventorySorted(){
+        sortProductsByPublicationDate();
+        return inventory;
     }
 
 

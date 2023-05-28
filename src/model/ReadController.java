@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Random;
 
 
 public class ReadController {
@@ -10,11 +11,13 @@ public class ReadController {
     ArrayList<User> users;
     ArrayList<BibliographicProduct> bibliographicProducts;
     ArrayList<Bill> bills;
+    Random random;
 
-    public ReadController(){
+    public ReadController()throws Exception{
         users = new ArrayList<>();
         bibliographicProducts = new ArrayList<>();
         bills = new ArrayList<>();
+        random = new Random();
         testCase();
     }
     /**
@@ -68,7 +71,7 @@ public class ReadController {
      * @return The method is returning a String message that confirms the registration of a
      * bibliographic product and includes the unique ID of the product.
      */
-    public String registBiblioProduct(String productName, int bookPages, Calendar publicationDate, double productPrice, int magCategory, int emPeriodicity){
+    public String registBiblioProduct(String productName, int bookPages, Calendar publicationDate, double productPrice, int magCategory, int emPeriodicity) throws Exception{
 
         Category magKind;
         Periodicity magPeriod;
@@ -117,7 +120,7 @@ public class ReadController {
     * @return The method is returning a message that confirms the registration of a book and includes
     * its unique ID.
     */
-    public String registBiblioProduct(String productName, int bookPages, Calendar publicationDate, double productPrice, int bookGenre){
+    public String registBiblioProduct(String productName, int bookPages, Calendar publicationDate, double productPrice, int bookGenre)throws Exception{
 
         Genre bookType;
 
@@ -278,60 +281,57 @@ public class ReadController {
      * and the price. If the user or the book does not exist, it returns a message indicating that.
      */
     public String buyBook(String userName, String bookName){
-
+       
+        if (bibliographicProducts == null) {
+            return "Error: bibliographicProducts is null";
+        }
+    
+        if (users == null) {
+            return "Error: users is null";
+        }
+    
         boolean foundUser = false;
         boolean foundProduct = false;
-        String msj = " ";
-
-        for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
+        String msj = "";
+    
+        for (int i = 0; i < bibliographicProducts.size() && !foundProduct; i++) {
             BibliographicProduct product = bibliographicProducts.get(i);
-            if(product.getProductName().equalsIgnoreCase(bookName) && product instanceof Book){
+            if (product != null && product.getProductName().equalsIgnoreCase(bookName) && product instanceof Book) {
                 foundProduct = true;
-                for(int x = 0; x < users.size() && !foundUser; x++){
-                    if(users.get(i).getUsername().equalsIgnoreCase(userName) && users.get(x) instanceof regularUser){
-
+                for (int x = 0; x < users.size() && !foundUser; x++) {
+                    User user = users.get(x);
+                    if (user != null && user.getUsername().equalsIgnoreCase(userName)) {
                         foundUser = true;
-                       
                         Calendar calendar = Calendar.getInstance();
-                        ((Book)bibliographicProducts.get(i)).setCopiesSold();
+                        ((Book) bibliographicProducts.get(i)).setCopiesSold();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String buyDate = dateFormat.format(calendar.getTime());
                         double billPrice = product.getProductPrice();
                         String id = product.getUniqueId();
-                        Bill bill = new Bill(billPrice, buyDate, id );
+                        Bill bill = new Bill(billPrice, buyDate, id);
                         bills.add(bill);
-
-                        msj = ((regularUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyDate + "\n" + "by a price of " +  product.getProductPrice() ;
-
-                        
+    
+                        if (user instanceof regularUser) {
+                            msj = ((regularUser) user).addProduct(product) + "\nAt " + buyDate + "\nby a price of " + product.getProductPrice();
+                        } else if (user instanceof premiumUser) {
+                            msj = ((premiumUser) user).addProduct(product) + "\nAt " + buyDate + "\nby a price of " + product.getProductPrice();
+                        }
                     }
-                    else if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof premiumUser){
-
-                        Calendar calendar = Calendar.getInstance();
-                        ((Book)bibliographicProducts.get(i)).setCopiesSold();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String buyDate = dateFormat.format(calendar.getTime());
-                        double billPrice = product.getProductPrice();
-                        String id = product.getUniqueId();
-                        Bill bill = new Bill(billPrice, buyDate, id );
-                        bills.add(bill);
-                        msj = ((premiumUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyDate + "\n" + "by a price of " +  product.getProductPrice() ;
-                    }
-                    else{
-                        msj = "The user does not exist.";
-                    }
-                    
                 }
-
-            }
-            else{
+    
+                if (!foundUser) {
+                    msj = "The user does not exist.";
+                }
+            } else {
                 msj = "The book does not exist.";
             }
-
         }
-
+    
         return msj;
+    
     }
+
+        
 
  
   /**
@@ -347,57 +347,51 @@ public class ReadController {
    */
     public String buyMagazine(String userName, String magazineName){
 
+        if (bibliographicProducts == null) {
+            return "Error: bibliographicProducts is null";
+        }
+    
+        if (users == null) {
+            return "Error: users is null";
+        }
+    
         boolean foundUser = false;
         boolean foundProduct = false;
         String msj = "";
-
-        for(int i = 0; i < bibliographicProducts.size() && !foundProduct; i++){
+    
+        for (int i = 0; i < bibliographicProducts.size() && !foundProduct; i++) {
             BibliographicProduct product = bibliographicProducts.get(i);
-            if(product.getProductName().equalsIgnoreCase(magazineName) && product instanceof Magazine){
+            if (product != null && product.getProductName().equalsIgnoreCase(magazineName) && product instanceof Magazine) {
                 foundProduct = true;
-                for(int x = 0; x < users.size() && !foundUser; x++){
-                    if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof regularUser){
-
+                for (int x = 0; x < users.size() && !foundUser; x++) {
+                    User user = users.get(x);
+                    if (user != null && user.getUsername().equalsIgnoreCase(userName)) {
                         foundUser = true;
                         Calendar calendar = Calendar.getInstance();
-                        ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
+                        ((Magazine) bibliographicProducts.get(i)).setActiveSubscriptions();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String buyingDate = dateFormat.format(calendar.getTime());
+                        String buyDate = dateFormat.format(calendar.getTime());
                         double billPrice = product.getProductPrice();
                         String id = product.getUniqueId();
-                        Bill bill = new Bill(billPrice, buyingDate, id );
+                        Bill bill = new Bill(billPrice, buyDate, id);
                         bills.add(bill);
-                        msj = ((regularUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyingDate + "\n" + "by a price of " +  product.getProductPrice() ;
-
-                        
+    
+                        if (user instanceof regularUser) {
+                            msj = ((regularUser) user).addProduct(product) + "\nAt " + buyDate + "\nby a price of " + product.getProductPrice();
+                        } else if (user instanceof premiumUser) {
+                            msj = ((premiumUser) user).addProduct(product) + "\nAt " + buyDate + "\nby a price of " + product.getProductPrice();
+                        }
                     }
-                    else if(users.get(i).getUsername().equals(userName) && users.get(x) instanceof premiumUser){
-
-                        foundUser = true;
-                        Calendar calendar = Calendar.getInstance();
-                        ((Magazine)bibliographicProducts.get(i)).setActiveSubscriptions();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String buyingDate = dateFormat.format(calendar.getTime());
-                        double billPrice = product.getProductPrice();
-                        String id = product.getUniqueId();
-                        Bill bill = new Bill(billPrice, buyingDate, id );
-                        bills.add(bill);
-
-                        msj = ((premiumUser)users.get(x)).addProduct(product) +  "\n" + "At" + buyingDate + "\n" + "by a price of " +  product.getProductPrice() ;
-                    }
-                    else{
-                        msj = "The user does not exist.";
-                    }
-                    
                 }
-
+    
+                if (!foundUser) {
+                    msj = "The user does not exist.";
+                }
+            } else {
+                msj = "The Magazine does not exist.";
             }
-            else{
-                msj = "The book does not exist.";
-            }
-
         }
-
+    
         return msj;
     }
 
@@ -412,9 +406,9 @@ public class ReadController {
         String msj = "";
         int optionCount = 0;
 
-        for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Book; i ++){
-            optionCount =+ 1;
-            msj = optionCount + "." + bibliographicProducts.get(i).getProductName() + "\n" ;
+        for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Book ; i ++){
+            optionCount += 1;
+            msj += optionCount + "." + bibliographicProducts.get(i).getProductName() + "\n" ;
         }
         return msj;
     }
@@ -425,14 +419,17 @@ public class ReadController {
     * @return The method `displayMagazines` returns a string that contains the names of all the
     * magazines in the `bibliographicProducts` list.
     */
-    public String displayMagazines(){
+    public String displayMag(){
 
         String msj = "";
         int optionCount = 0;
 
-        for(int i = 0; i < bibliographicProducts.size() && bibliographicProducts.get(i) instanceof Magazine; i ++){
-            optionCount =+ 1;
-            msj = optionCount + "." + bibliographicProducts.get(i).getProductName() + "\n" ;
+        for(int i = 0; i < bibliographicProducts.size() ; i ++){
+            BibliographicProduct product = bibliographicProducts.get(i);
+            if(product instanceof Magazine){
+                optionCount += 1;
+                msj += optionCount + "." + bibliographicProducts.get(i).getProductName() + "\n" ;
+            } 
         }
         return msj;
     }
@@ -440,15 +437,23 @@ public class ReadController {
      * The function creates instances of a book, magazine, regular user, and premium user and adds them
      * to their respective lists.
      */
-    public void testCase(){
+    public void testCase()throws Exception{
 
-        BibliographicProduct book = new Book("100 Anios de soledad", 320, null, 87000, Genre.HISTORIC_NOVEL);
-        BibliographicProduct magazine = new Magazine(null, 0, null, 98000, null, null);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String date = "09/19/2005";
+        Calendar newDate = Calendar.getInstance();
+        newDate.setTime(formatter.parse(date));
+
+        
+
+        BibliographicProduct book = new Book("100 Anios de soledad", 320, newDate, 87000, Genre.HISTORIC_NOVEL);
+        BibliographicProduct magazine = new Magazine("El Clavo", 320, newDate, 98000, Category.DESIGN, Periodicity.DAILY);
         User regularUser = new regularUser("Andres", "1117349952");
         User premiumUser = new premiumUser("Alejo", "24604311");
 
         bibliographicProducts.add(book);
         bibliographicProducts.add(magazine);
+        System.out.println("Se agrego" + magazine.getProductName());
         users.add(regularUser);
         users.add(premiumUser);
     }
@@ -733,7 +738,7 @@ public class ReadController {
                 }
             }
         }
-        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount + "$";
 
         return msj;
     }
@@ -754,13 +759,13 @@ public class ReadController {
             if(bibliographicProducts.get(i) instanceof Book){
                 Genre genre = ((Book)bibliographicProducts.get(i)).getBookGenre();
                 if( genre == Genre.SCIENCE_FICTION){
-                    double localCount = ((Book)bibliographicProducts.get(i)).getCopiesSold() * bibliographicProducts.get(i).getProductPrice();
+                    double localCount = ((Book)bibliographicProducts.get(i)).getCopiesSold() * bibliographicProducts.get(i).getProductPrice() ;
                     salesCount += localCount;
                     copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
                 }
             }
         }
-        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount + "$";
 
         return msj;
     }
@@ -787,7 +792,7 @@ public class ReadController {
                 }
             }
         }
-        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount + "$";
 
         return msj;
     }
@@ -811,11 +816,11 @@ public class ReadController {
                 if( category == Category.VARIETY){
                     double localCount = ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions() * bibliographicProducts.get(i).getProductPrice();
                     salesCount += localCount;
-                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                    copiesCount += ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions();
                 }
             }
         }
-        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount + "$";
 
         return msj;
     }
@@ -838,11 +843,11 @@ public class ReadController {
                 if( category == Category.DESIGN){
                     double localCount = ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions() * bibliographicProducts.get(i).getProductPrice();
                     salesCount += localCount;
-                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                    copiesCount += ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions();
                 }
             }
         }
-        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount + "$";
 
         return msj;
     }
@@ -865,11 +870,11 @@ public class ReadController {
                 if( category == Category.CIENTIFIC){
                     double localCount = ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions() * bibliographicProducts.get(i).getProductPrice();
                     salesCount += localCount;
-                    copiesCount += ((Book)bibliographicProducts.get(i)).getCopiesSold();
+                    copiesCount += ((Magazine)bibliographicProducts.get(i)).getActiveSubscriptions();
                 }
             }
         }
-        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount;
+        msj = "The copies sold are:" + copiesCount + ", and the total sales value is: " + salesCount + "$";
 
         return msj;
     }
@@ -915,5 +920,182 @@ public class ReadController {
 
         return flag;
     }
-    
+   /**
+    * This function returns an ArrayList of String matrices representing the products owned by a user,
+    * with each matrix containing up to 25 product IDs.
+    * 
+    * @param userName The username of the user for whom we want to generate a matrix of their products.
+    * @return An ArrayList of String matrices representing the products owned by a user, with each
+    * matrix containing up to 25 product IDs. The number of matrices returned depends on whether the
+    * user is a premium or regular user.
+    */
+    public ArrayList<String[][]> userProductsMatrix(String userName) {
+
+        boolean userFound = false;
+        int ROW = 5;
+        int COLUMN = 5;
+        boolean flag = false;
+        ArrayList<String[][]> library = new ArrayList<>();
+
+        for (int i = 0; i < users.size() && !userFound; i++){
+            User user = users.get(i);
+            if (user != null && user.getUsername().equals(userName) && user instanceof premiumUser) {
+                userFound = true;
+                ArrayList<BibliographicProduct> userInventory = user.getInventorySorted();
+                int k = 0;
+                do{
+                    String[][] productIdMatrix = new String[ROW][COLUMN];
+
+                    for (int j = 0; j < ROW; j++) {
+                        for (int l = 0; l < COLUMN; l++) {
+                            if (k < userInventory.size()) {
+                                productIdMatrix[i][j] = userInventory.get(k).getUniqueId();
+                                k++;
+                            } 
+                            else{
+ 
+                                productIdMatrix[i][j] = "__"; 
+
+                            }
+                        }
+                    
+                    }
+
+                    library.add(productIdMatrix);
+
+                }while(library.size() != 3);
+
+            }     
+            else if(user.getUsername().equals(userName) && user instanceof regularUser){
+                userFound = true;
+                ArrayList<BibliographicProduct> regularUserInventory = user.getInventorySorted();
+                int l = 0;
+                do{
+                    String[][] productIdMatrix = new String[ROW][COLUMN];
+
+                    for (int m = 0; m < ROW; m++) {
+                        for (int n = 0; n < COLUMN; n++) {
+                            if (l < regularUserInventory.size()) {
+                                productIdMatrix[m][n] = regularUserInventory.get(l).getUniqueId();
+                                l++;    
+                            } 
+                            else{
+
+                                productIdMatrix[m][n] = "__"; 
+                            }
+                        }
+                    }
+                    library.add(productIdMatrix);
+
+                }while(library.size() != 1);
+
+            }
+        }
+
+        return library;
+    }
+    /**
+     * This function prints a user's library in a formatted string.
+     * 
+     * @param userName The username of the user whose library is being printed.
+     * @param indexOfLibrary The index of the library to be printed from the ArrayList of libraries
+     * returned by the method userProductsMatrix.
+     * @return The method is returning a String that represents the product matrix of a specific
+     * library for a given user.
+     */
+    public String printlIbrary(String userName, int indexOfLibrary){
+
+        ArrayList<String[][]> showLibrary = userProductsMatrix(userName);
+        String[][] productMatrix = showLibrary.get(indexOfLibrary);
+        String msg = "";
+
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                if(productMatrix[i][j] != null){
+                    msg += productMatrix[i][j] + "";
+                }
+                else{
+                    msg += "__";
+                }
+                    
+            }
+            msg += "\n";
+        }
+        return msg;
+    }
+
+  
+    /**
+     * This function checks if a user has a specific book in their collection.
+     * 
+     * @param username The username of the user whose products are being searched for.
+     * @param productId The ID of the bibliographic product that needs to be checked for its property.
+     * @return The method is returning a boolean value, which indicates whether a specific book
+     * (identified by its productId) is owned by a specific user (identified by their username).
+     */
+    public boolean checkBookProperty(String username, String productId){
+        boolean foundProduct = false;
+        boolean foundUser = false;
+        for(int i = 0; i < users.size() && !foundUser; i++){
+            User user = users.get(i);
+            if(user.getUsername().equalsIgnoreCase(username)){
+                foundUser = true;
+                BibliographicProduct product = user.searchProductById(productId);
+                if(product != null)
+                foundProduct = true;
+            }
+        }
+        return foundProduct;   
+    }
+    /**
+     * The function checks if a user with a given username is a premium user.
+     * 
+     * @param userName The username of the user whose premium status needs to be checked.
+     * @return The method is returning a boolean value. It returns true if the user with the given
+     * username is a premium user, and false otherwise.
+     */
+    public boolean checkPremium(String userName) {
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (user.getUsername().equals(userName) && user instanceof premiumUser) {
+                return true; 
+            }
+        }
+        return false; 
+    }
+  /**
+   * The function takes a username as input, searches for a regular user with that username, generates
+   * a random number, and returns an ad based on that number.
+   * 
+   * @param userName The username of the user for whom the ad needs to be reproduced.
+   * @return The method is returning a String that represents an advertisement. The specific
+   * advertisement being returned depends on the username passed as a parameter and a random number
+   * generated within the method.
+   */
+    public String reproduceAd(String userName){
+        String ad = "";
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (user.getUsername().equals(userName) && user instanceof regularUser) {
+                int randomNumber =  random.nextInt(3);
+                ad = ((regularUser)user).displayAds(randomNumber);
+            }
+        }
+        return ad;
+    }
+    /**
+     * This function increases the number of read pages for a bibliographic product with a given ID.
+     * 
+     * @param productId a String representing the unique identifier of a bibliographic product.
+     */
+    public void increaseProductReadPages(String productId){
+        boolean flag = false; 
+        for(int i = 0; i < bibliographicProducts.size() && !flag; i++){
+            BibliographicProduct product = bibliographicProducts.get(i);
+            if(product.getUniqueId().equalsIgnoreCase(productId)){
+                product.increaseReadPages();
+                flag = true;
+            }
+        }
+    }
 }
