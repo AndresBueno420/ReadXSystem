@@ -40,5 +40,14 @@ public class Magazine extends BibliographicProduct {
    public int getActiveSubscriptions(){
         return this.activeSubscription;
    }
-    
+    /**
+     * This Java function decreases the value of the activeSubscription variable by 1 if it is not
+     * already 0.
+     */
+    public void decreaseActiveSubscriptions(){
+        if(this.activeSubscription != 0){
+            this.activeSubscription -= 1;
+        }
+    }
+
 }

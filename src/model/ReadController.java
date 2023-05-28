@@ -272,7 +272,7 @@ public class ReadController {
  
     /**
      * The function allows a user to buy a book and updates the necessary information such as the
-     * number of copies sold and the purchase date.
+     * number of copies sold and the purchase date, and adds the bill to the array.
      * 
      * @param userName A String representing the username of the user who wants to buy a book.
      * @param bookName The name of the book that the user wants to buy.
@@ -335,8 +335,9 @@ public class ReadController {
 
  
   /**
-   * The function buys a magazine for a user and returns a message indicating the success or failure of
-   * the transaction.
+   * The function allows a user to buy a magazine and updates the necessary information such as the
+     * number of active subscriptions and the purchase date, and adds the bill to the array.
+     * 
    * 
    * @param userName The username of the user who wants to buy the magazine.
    * @param magazineName The name of the magazine that the user wants to buy.
@@ -590,6 +591,13 @@ public class ReadController {
 
         return msj;
     }
+   /**
+    * The function returns a message indicating the most read category of magazines and the total
+    * amount of pages read in that category.
+    * 
+    * @return A String message indicating the most read category and the total amount of pages read in
+    * that category, or a message indicating that no product has been read yet.
+    */
     public String showMostReadCategory(){
 
         String msj = "";
@@ -934,7 +942,6 @@ public class ReadController {
         boolean userFound = false;
         int ROW = 5;
         int COLUMN = 5;
-        boolean flag = false;
         ArrayList<String[][]> library = new ArrayList<>();
 
         for (int i = 0; i < users.size() && !userFound; i++){
@@ -949,7 +956,7 @@ public class ReadController {
                     for (int j = 0; j < ROW; j++) {
                         for (int l = 0; l < COLUMN; l++) {
                             if (k < userInventory.size()) {
-                                productIdMatrix[i][j] = userInventory.get(k).getUniqueId();
+                                productIdMatrix[j][l] = userInventory.get(k).getUniqueId();
                                 k++;
                             } 
                             else{
@@ -987,7 +994,7 @@ public class ReadController {
                     }
                     library.add(productIdMatrix);
 
-                }while(library.size() != 1);
+                }while(library.size() != 3);
 
             }
         }
@@ -1012,7 +1019,7 @@ public class ReadController {
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 if(productMatrix[i][j] != null){
-                    msg += productMatrix[i][j] + "";
+                    msg += productMatrix[i][j] + " ";
                 }
                 else{
                     msg += "__";
@@ -1041,8 +1048,10 @@ public class ReadController {
             if(user.getUsername().equalsIgnoreCase(username)){
                 foundUser = true;
                 BibliographicProduct product = user.searchProductById(productId);
-                if(product != null)
-                foundProduct = true;
+                if(product != null){
+                    foundProduct = true;
+                }
+                
             }
         }
         return foundProduct;   
@@ -1098,4 +1107,45 @@ public class ReadController {
             }
         }
     }
+   /**
+    * The function allows a user to unsubscribe from a magazine and decreases the active subscriptions
+    * count for that magazine.
+    * 
+    * @param userName The username of the user who wants to unsubscribe from a magazine.
+    * @param productName The name of the magazine that the user wants to unsubscribe from.
+    * @return The method is returning a String message indicating whether the user has successfully
+    * unsubscribed from a magazine or not.
+    */
+    public String unsubscribeToMagazine(String userName, String productName){
+        boolean foundUser = false;
+        String msj = " ";
+        for(int i = 0; i < users.size() && !foundUser; i++){
+            User user = users.get(i);
+            if(user.getUsername().equalsIgnoreCase(userName)){
+                foundUser = true;
+                BibliographicProduct product = user.searchProduct(productName);
+                if(product != null){
+                    user.removeMagazine(product);
+                    msj = "The user has unsubbed from the magazine.";
+                    
+                }else{
+                    msj = "The user does not own that magazine. ";
+                }
+                
+            }else{
+                msj = "The user does not exist.";
+            }
+
+        }
+        
+        for(int x = 0; x < bibliographicProducts.size();x++){
+            BibliographicProduct product = bibliographicProducts.get(x);
+            if(product.getProductName().equalsIgnoreCase(productName)){
+                ((Magazine)product).decreaseActiveSubscriptions();
+            }
+        }
+        return msj; 
+    }
+       
 }
+

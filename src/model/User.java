@@ -154,6 +154,20 @@ public abstract class User {
         return inventory;
     }
 
+    /**
+     * This Java function removes a magazine from an inventory of bibliographic products.
+     * 
+     * @param product The parameter "product" is an instance of the class "BibliographicProduct", which
+     * is a superclass that may have subclasses such as "Magazine". The method checks if the "product"
+     * parameter is an instance of "Magazine" and removes it from the inventory if it is.
+     */
+    public void removeMagazine(BibliographicProduct product){
+        if(product instanceof Magazine){
+            inventory.remove(product);
+        }
+
+    }
+
 
        
 }

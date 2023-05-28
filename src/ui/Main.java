@@ -24,7 +24,7 @@ public class Main{
             option = main.validateIntegerInput();
             main.executeOption(option);
 
-        }while(option != 13);
+        }while(option != 14);
 
     }
     public void menu(){
@@ -47,7 +47,8 @@ public class Main{
         System.out.println("10. Show top 5 most read products.");
         System.out.println("11. Show books sales.");
         System.out.println("12. Show magazines sales.");
-        System.out.println("13. Exit.");
+        System.out.println("13. Unsubscibe to a magazine.");
+        System.out.println("14. Exit.");
         System.out.println("-------------------");
 
     }
@@ -90,8 +91,11 @@ public class Main{
             case 12:
             showCategoriesSales();
                 break;
+            case 13:
+            unsubMagazine();
+                break;
 
-            case 13 :
+            case 14 :
             System.out.println("Thanks for using the system");
                 break;
             
@@ -652,6 +656,30 @@ public class Main{
             else{
                 System.out.println("The user doesn't have a product by that id.");
             }
+        }
+       /**
+        * This Java function allows a user to unsubscribe from a magazine by entering the name of the
+        * product and their username.
+        */
+        public void unsubMagazine(){
+
+            boolean controlFlag = controller.checkProductsEmpty();
+            String productName;
+            String username;
+            if(controlFlag == false){
+
+                System.out.println("Type the name of the product that is going to be deleted:");
+                reader.nextLine();
+                productName = reader.nextLine();
+                System.out.println("Type the username: ");
+                username = reader.next();
+                String msj = controller.unsubscribeToMagazine(username, productName);
+                System.out.println(msj);
+            }
+            else{
+                System.out.println("There is no product registered yet.");
+            }
+    
         }
         
         
